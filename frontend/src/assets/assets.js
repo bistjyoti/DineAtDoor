@@ -1,6 +1,6 @@
 import basket_icon from './basket_icon.png'
 import logo from './logo.png'
-import header_img from './header_img.png'
+import header_img from './new_header.png'
 import search_icon from './search_icon.png'
 import menu_1 from './menu_1.png'
 import menu_2 from './menu_2.png'
@@ -10,6 +10,8 @@ import menu_5 from './menu_5.png'
 import menu_6 from './menu_6.png'
 import menu_7 from './menu_7.png'
 import menu_8 from './menu_8.png'
+import menu_9 from './menu_9.png'
+
 
 import food_1 from './food_1.png'
 import food_2 from './food_2.png'
@@ -43,6 +45,13 @@ import food_29 from './food_29.png'
 import food_30 from './food_30.png'
 import food_31 from './food_31.png'
 import food_32 from './food_32.png'
+import food_33 from './food_33.png'
+import food_34 from './food_34.png'
+import food_35 from './food_35.png'
+import food_36 from './food_36.png'
+import food_37 from './food_37.png'
+import food_38 from './food_38.png'
+import food_39 from './food_39.png'
 
 import add_icon_white from './add_icon_white.png'
 import add_icon_green from './add_icon_green.png'
@@ -114,6 +123,10 @@ export const menu_list = [
     {
         menu_name: "Noodles",
         menu_image: menu_8
+    },
+    {
+        menu_name:"Indian",
+        menu_image: menu_9 
     }]
 
 export const food_list = [
@@ -121,7 +134,7 @@ export const food_list = [
         _id: "1",
         name: "Greek salad",
         image: food_1,
-        price: 12,
+        price: 80,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad"
     },
@@ -129,77 +142,77 @@ export const food_list = [
         _id: "2",
         name: "Veg salad",
         image: food_2,
-        price: 18,
+        price: 50,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad"
     }, {
         _id: "3",
         name: "Clover Salad",
         image: food_3,
-        price: 16,
+        price: 70,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad"
     }, {
         _id: "4",
         name: "Chicken Salad",
         image: food_4,
-        price: 24,
+        price: 100,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad"
     }, {
         _id: "5",
         name: "Lasagna Rolls",
         image: food_5,
-        price: 14,
+        price: 100,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Rolls"
     }, {
         _id: "6",
         name: "Peri Peri Rolls",
         image: food_6,
-        price: 12,
+        price: 80,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Rolls"
     }, {
         _id: "7",
         name: "Chicken Rolls",
         image: food_7,
-        price: 20,
+        price: 120,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Rolls"
     }, {
         _id: "8",
         name: "Veg Rolls",
         image: food_8,
-        price: 15,
+        price: 70,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Rolls"
     }, {
         _id: "9",
         name: "Ripple Ice Cream",
         image: food_9,
-        price: 14,
+        price: 50,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Deserts"
     }, {
         _id: "10",
         name: "Fruit Ice Cream",
         image: food_10,
-        price: 22,
+        price: 40,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Deserts"
     }, {
         _id: "11",
         name: "Jar Ice Cream",
         image: food_11,
-        price: 10,
+        price: 60,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Deserts"
     }, {
         _id: "12",
         name: "Vanilla Ice Cream",
         image: food_12,
-        price: 12,
+        price: 30,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Deserts"
     },
@@ -207,7 +220,7 @@ export const food_list = [
         _id: "13",
         name: "Chicken Sandwich",
         image: food_13,
-        price: 12,
+        price: 70,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Sandwich"
     },
@@ -215,77 +228,77 @@ export const food_list = [
         _id: "14",
         name: "Vegan Sandwich",
         image: food_14,
-        price: 18,
+        price: 40,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Sandwich"
     }, {
         _id: "15",
         name: "Grilled Sandwich",
         image: food_15,
-        price: 16,
+        price: 50,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Sandwich"
     }, {
         _id: "16",
         name: "Bread Sandwich",
         image: food_16,
-        price: 24,
+        price: 45,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Sandwich"
     }, {
         _id: "17",
         name: "Cup Cake",
         image: food_17,
-        price: 14,
+        price: 30,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Cake"
     }, {
         _id: "18",
         name: "Vegan Cake",
         image: food_18,
-        price: 12,
+        price: 60,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Cake"
     }, {
         _id: "19",
         name: "Butterscotch Cake",
         image: food_19,
-        price: 20,
+        price: 100,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Cake"
     }, {
         _id: "20",
         name: "Sliced Cake",
         image: food_20,
-        price: 15,
+        price: 70,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Cake"
     }, {
         _id: "21",
         name: "Garlic Mushroom ",
         image: food_21,
-        price: 14,
+        price: 60,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pure Veg"
     }, {
         _id: "22",
         name: "Fried Cauliflower",
         image: food_22,
-        price: 22,
+        price: 50,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pure Veg"
     }, {
         _id: "23",
         name: "Mix Veg Pulao",
         image: food_23,
-        price: 10,
+        price: 60,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pure Veg"
     }, {
         _id: "24",
         name: "Rice Zucchini",
         image: food_24,
-        price: 12,
+        price: 70,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pure Veg"
     },
@@ -293,7 +306,7 @@ export const food_list = [
         _id: "25",
         name: "Cheese Pasta",
         image: food_25,
-        price: 12,
+        price: 80,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pasta"
     },
@@ -301,50 +314,130 @@ export const food_list = [
         _id: "26",
         name: "Tomato Pasta",
         image: food_26,
-        price: 18,
+        price: 60,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pasta"
     }, {
         _id: "27",
         name: "Creamy Pasta",
         image: food_27,
-        price: 16,
+        price: 75,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pasta"
     }, {
         _id: "28",
         name: "Chicken Pasta",
         image: food_28,
-        price: 24,
+        price: 90,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Pasta"
     }, {
         _id: "29",
         name: "Buttter Noodles",
         image: food_29,
-        price: 14,
+        price: 55,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Noodles"
     }, {
         _id: "30",
         name: "Veg Noodles",
         image: food_30,
-        price: 12,
+        price: 45,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Noodles"
     }, {
         _id: "31",
         name: "Somen Noodles",
         image: food_31,
-        price: 20,
+        price: 55,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Noodles"
     }, {
         _id: "32",
         name: "Cooked Noodles",
         image: food_32,
-        price: 15,
+        price: 40,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Noodles"
-    }
+    }, {
+    _id: "33",
+    name: "Chicken Biryani",
+    image: food_33,
+    price: 180,
+    description: "Aromatic basmati rice cooked with spiced chicken",
+    category: "Indian"
+},
+{
+    _id: "34",
+    name: "Butter Naan",
+    image: food_34,
+    price: 40,
+    description: "Soft Indian bread topped with butter",
+    category: "Indian"
+},
+{
+    _id: "35",
+    name: "Chole Bhature",
+    image: food_35,
+    price: 90,
+    description: "Spicy chickpeas served with fried bread",
+    category: "Indian"
+},
+{
+    _id: "36",
+    name: "Chicken Tandoori",
+    image: food_36,
+    price: 220,
+    description: "Roasted chicken marinated with Indian spices",
+    category: "Indian"
+},
+{
+    _id: "37",
+    name: "Butter Chicken",
+    image: food_37,
+    price: 200,
+    description: "Creamy tomato based chicken curry",
+    category: "Indian"
+},
+{
+    _id: "38",
+    name: "Masala Dosa",
+    image: food_38,
+    price: 70,
+    description: "Crispy rice crepe filled with spicy potato",
+    category: "Indian"
+},
+{
+    _id: "39",
+    name: "Idli Sambar",
+    image: food_39,
+    price: 50,
+    description: "Steamed rice cakes served with sambar",
+    category: "Indian"
+},
+{
+    _id: "40",
+    name: "Margherita Pizza",
+    image: food_8,
+    price: 150,
+    description: "Classic pizza topped with cheese and tomato",
+    category: "Fast Food"
+},
+{
+    _id: "41",
+    name: "Cheese Burger",
+    image: food_9,
+    price: 120,
+    description: "Juicy burger with cheese slice",
+    category: "Fast Food"
+},
+{
+    _id: "42",
+    name: "Fried Chicken Bucket",
+    image: food_10,
+    price: 250,
+    description: "Crispy deep fried chicken pieces",
+    category: "Fast Food"
+}
 ]
+

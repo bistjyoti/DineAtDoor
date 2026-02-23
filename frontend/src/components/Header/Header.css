@@ -1,12 +1,15 @@
-.header{
+.header {
     height: 34vw;
     margin: 30px auto;
-    background: url('/header_img.png') no-repeat;
-    background-size: contain;
+    /* Yahan path assets ke hisaab se check kar lena */
+    background: url('/new_header.png') no-repeat;
+    background-size: cover; /* 'contain' se image kat rahi thi ya side khali thi, 'cover' se pura fill ho jayega */
+    background-position: center;
     position: relative;
+    border-radius: 15px; /* Corners ko thoda smooth karne ke liye */
 }
 
-.header-contents{
+.header-contents {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -18,44 +21,61 @@
     animation: fadeIn 3s;
 }
 
-.header-contents h2{
+.header-contents h2 {
     font-weight: 500;
     color: white;
-    font-size:max(4.5vw, 22px);
+    font-size: max(4.5vw, 22px);
+    line-height: 1.1; /* Text ko thoda compact karne ke liye */
 }
 
 .header-contents p {
     color: white;
     font-size: 1vw;
+    line-height: 1.4;
 }
 
-.header-contents button{
+.header-contents button {
     border: none;
     color: #747474;
     font-weight: 500;
     padding: 1vw 2.3vw;
     background-color: white;
-    font-size: max(1vw,13px);
+    font-size: max(1vw, 13px);
     border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-@media (max-width:1050px){
-.header-contents{
-    max-width: 45%;
-}
+.header-contents button:hover {
+    background-color: #f0f0f0; /* Hover effect ke liye */
 }
 
-@media (max-width:750px){
-    
-    .header-contents{
-        max-width: 65%;
+/* Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Responsive Designs */
+@media (max-width: 1050px) {
+    .header-contents {
+        max-width: 45%;
     }
+}
 
+@media (max-width: 750px) {
+    .header {
+        height: 50vw; /* Mobile par header thoda bada dikhega toh better lagega */
+    }
+    .header-contents {
+        max-width: 80%; /* Mobile par text ko zyada jagah chahiye */
+        bottom: 15%;
+    }
     .header-contents p {
         display: none;
     }
-
-    .header-contents button{
+    .header-contents button {
         padding: 2vw 4vw;
+        font-size: 14px;
     }
 }
