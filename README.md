@@ -141,7 +141,7 @@ Jyoti Bist [https://github.com/bistjyoti]
  — Project Owner
 
 Prince Kumar Gupta
- _ Teammate
+ — Teammate
 
 ## 📫 Contact
 For any questions or suggestions, feel free to contact me.
