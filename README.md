@@ -137,7 +137,7 @@ Contributions are welcome! Please fork the repository and create a pull request 
 
 👨‍💻 Contributors
 
-Jyoti Bist
+Jyoti Bist [https://github.com/bistjyoti]
  — Project Owner
 
 Prince Kumar Gupta
