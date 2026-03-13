@@ -1,4 +1,4 @@
-# 🚚 Food Ordering Web App (MERN Stack)
+# 🚚 DineAtDoor (MERN Stack)
 
 ## ✨ Table of Contents
 - [Introduction](#introduction)
@@ -41,8 +41,8 @@ Make sure you have Node.js (v20+ recommended) and npm installed.
 
 ### Clone the Repository
 ```sh
-git clone https://github.com/DulanjaliSenarathna/mern-food-delivery-app.git
-cd mern-food-delivery-app
+git clone https://github.com/bistjyoti/DineAtDoor
+cd DineAtDoor
 ```
 
 ## Backend Setup
