@@ -137,11 +137,11 @@ Contributions are welcome! Please fork the repository and create a pull request 
 
 👨‍💻 Contributors
 
-[Dulanjali Senarathna](https://github.com/DulanjaliSenarathna)
+Jyoti Bist
  — Project Owner
 
-[prem2621](https://github.com/prem2621)
- — Bug fixes, secure env handling, image display improvement
+Prince Kumar Gupta
+ _ Teammate
 
 ## 📫 Contact
 For any questions or suggestions, feel free to contact me.
