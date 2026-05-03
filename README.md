@@ -1,6 +1,6 @@
-# 🚚 DineAtDoor (MERN Stack)
+# DineAtDoor (MERN Stack)
 
-## ✨ Table of Contents
+## Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
@@ -11,10 +11,10 @@
 - [Contributing](#contributing)
 - [Contact](#contact)
 
-## 📊 Introduction
+## Introduction
 This is a full-stack food ordering web application built using the MERN stack (MongoDB, Express, React, Node.js). The application consists of a customer-facing app for ordering food and an admin app for managing orders, menu items, and more.
 
-## 🚀 Features
+##  Features
 - User authentication and authorization
 - Browse food items
 - Add items to the cart and place orders
@@ -22,7 +22,7 @@ This is a full-stack food ordering web application built using the MERN stack (M
 - Order tracking
 - Admin panel to manage menu items, orders
 
-## 🛠️ Technologies Used
+## Technologies Used
 - **Frontend:** React.js, React Context API, React Router
 - **Backend:** Node.js, Express.js
 - **Payment Gateway:** Stripe
@@ -35,7 +35,7 @@ This is a full-stack food ordering web application built using the MERN stack (M
 - Node.js
 - MongoDB
 
-## 🚀 Run Locally — Step-by-step
+##  Run Locally — Step-by-step
 
 Make sure you have Node.js (v20+ recommended) and npm installed.
 
