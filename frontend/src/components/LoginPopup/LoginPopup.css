@@ -1,73 +1,114 @@
-.login-popup{
-    position: absolute;
-    z-index: 1;
+.login-popup {
+    /* Fixed position se ye screen ke sath move nahi karega aur pure page ko cover karega */
+    position: fixed; 
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: #00000090;
+    height: 100vh;
+    background-color: #000000b0; /* Thoda aur dark parda taaki piche ka text na dikhe */
     display: grid;
+    z-index: 99999; /* Isse Navbar aur Cart dono iske niche rahenge */
 }
 
-.login-popup-container{
+.login-popup-container {
     place-self: center;
-    width: max(23vw,330px);
+    width: min(90vw, 420px);
+    max-height: calc(100vh - 40px);
     color: #808080;
-    background-color: white;
+    background-color: white; /* Solid white background */
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
     padding: 25px 30px;
     border-radius: 8px;
     font-size: 14px;
-    animation: fadeIn 0.5s;
+    animation: fadeIn 0.4s;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.5); /* Popup ko ubhara hua dikhane ke liye */
+    overflow-y: auto;
 }
 
-.login-popup-title{
+.login-popup-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: black;
+    font-size: 18px;
+    font-weight: 600;
 }
 
-.login-popup-title img{
+.login-popup-title img {
     width: 16px;
     cursor: pointer;
 }
 
-.login-popup-inputs{
+.login-popup-inputs {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
-.login-popup-inputs input{
+.login-popup-inputs input {
     outline: none;
     border: 1px solid #c9c9c9;
-    padding: 10px;
+    padding: 12px;
     border-radius: 4px;
+    font-size: 14px;
 }
 
-.login-popup-container button{
+.face-capture-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.face-capture-area video,
+.face-capture-area img {
+    width: 100%;
+    max-height: 220px;
+    min-height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.login-popup-container button {
     border: none;
-    padding: 10px;
+    padding: 12px;
     border-radius: 4px;
     color: white;
     background-color: tomato;
     cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    flex-shrink: 0;
 }
 
-.login-popup-condition{
+.login-popup-container button:hover {
+    background-color: #e24424;
+}
+
+.login-popup-condition {
     display: flex;
     align-items: start;
     gap: 8px;
-    margin-top: -15px;
-}
-
-.login-popup-condition input{
     margin-top: 5px;
 }
 
-.login-popup p span{
-    color: tomato;
-    font-weight: 500;
+.login-popup-condition input {
+    margin-top: 4px;
     cursor: pointer;
+}
+
+.login-popup p {
+    text-align: center;
+}
+
+.login-popup p span {
+    color: tomato;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }

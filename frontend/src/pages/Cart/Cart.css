@@ -104,3 +104,7 @@
         justify-content: start;
     }
 }
+
+.cart {
+    overflow-x: hidden; 
+}

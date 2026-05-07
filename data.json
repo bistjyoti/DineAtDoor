@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Paneer Butter Masala",
+    "description": "Rich and creamy paneer curry",
+    "price": 180,
+    "image": "paneer.png",
+    "category": "Veg",
+    "restaurantId": "116544"
+  },
+  {
+    "name": "Dal Tadka",
+    "description": "Yellow lentils with authentic tadka",
+    "price": 120,
+    "image": "dal.png",
+    "category": "Veg",
+    "restaurantId": "116544"
+  }
+]
