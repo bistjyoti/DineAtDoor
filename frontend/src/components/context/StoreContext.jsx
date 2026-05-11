@@ -11,7 +11,7 @@ const DEFAULT_COORDS = { lat: 29.8543, lng: 77.8880 };
 
 const StoreContextProvider = (props) => {
     const [food_list, setFoodList] = useState([]); 
-    const [restaurant_list, setRestaurantList] = useState([]); // ✨ Naya state restaurants ke liye
+    const [restaurant_list, setRestaurantList] = useState([]);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("");
     const [locationCoords, setLocationCoords] = useState(() => {
@@ -21,7 +21,6 @@ const StoreContextProvider = (props) => {
     const url = "http://localhost:4000"; 
     const [currentLocation, setCurrentLocation] = useState("Kishanpur, Roorkee 📍");
 
-    // 🎯 1. Backend se Food Items fetch karna
     const fetchFoodList = async () => {
         try {
             const response = await axios.get(`${url}/api/food/list`);
@@ -29,39 +28,37 @@ const StoreContextProvider = (props) => {
                 setFoodList(response.data.data);
             }
         } catch (error) {
-            console.error("❌ Food fetch error:", error);
+            console.error(error);
         }
     };
 
-    // 🎯 2. Backend se Restaurants fetch karna (Live Swiggy Data)
     const fetchRestaurantList = async () => {
         try {
-            const response = await axios.get(`${url}/api/restaurant/fetch-live`, {
+            const response = await axios.get(`${url}/api/restaurant/list`);
+            if (response.data.success && response.data.data?.length > 0) {
+                setRestaurantList(response.data.data);
+                axios.get(`${url}/api/restaurant/sync-missing-menus`).then(() => fetchFoodList()).catch(() => {});
+                return;
+            }
+
+            await axios.get(`${url}/api/restaurant/sync-live`, {
                 params: {
                     lat: locationCoords.lat,
                     lng: locationCoords.lng
                 }
             });
-            if (response.data.success) {
-                setRestaurantList(response.data.data); // Live restaurant data yahan aayega
-                return;
+            const refreshed = await axios.get(`${url}/api/restaurant/list`);
+            if (refreshed.data.success) {
+                setRestaurantList(refreshed.data.data || []);
+                // await axios.get(`${url}/api/restaurant/sync-missing-menus`).catch(() => {});
+                await fetchFoodList();
             }
         } catch (error) {
-            console.error("❌ Live restaurant fetch error:", error);
-        }
-
-        // Fallback: agar live data fail ho jaye toh local DB se load kar do
-        try {
-            const response = await axios.get(`${url}/api/restaurant/list`);
-            if (response.data.success) {
-                setRestaurantList(response.data.data);
-            }
-        } catch (error) {
-            console.error("❌ Restaurant fetch fallback error:", error);
+            console.error(error);
+            setRestaurantList([]);
         }
     };
 
-    // 🎯 3. Cart Logic
     const addToCart = async (itemId) => {
         if (!cartItems[itemId]) {
             setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
@@ -101,18 +98,16 @@ const StoreContextProvider = (props) => {
         return totalAmount;
     };
 
-    // 🎯 4. Load Data (Saare components ready hone par call hoga)
     const loadData = async () => {
         await fetchFoodList();
-        
         const storedToken = localStorage.getItem("token");
         if (storedToken) {
             if (!isValidJwt(storedToken)) {
                 localStorage.removeItem("token");
+                localStorage.removeItem("isLoggedIn");
                 setToken("");
                 return;
             }
-
             setToken(storedToken);
             try {
                 const cartResponse = await axios.post(
@@ -122,16 +117,12 @@ const StoreContextProvider = (props) => {
                 );
                 if (cartResponse.data.success) {
                     setCartItems(cartResponse.data.cartData);
-                } else {
-                    localStorage.removeItem("token");
-                    setToken("");
                 }
             } catch (err) {
                 if (err.response?.status === 401) {
-                    localStorage.removeItem("token");
                     setToken("");
+                    localStorage.removeItem("token");
                 }
-                console.error("❌ Cart auth error:", err.response?.data || err.message || err);
             }
         }
     };
@@ -147,7 +138,7 @@ const StoreContextProvider = (props) => {
 
     const contextValue = {
         food_list,
-        restaurant_list, // ✨ Ab ye bhi accessible hai pure app mein
+        restaurant_list,
         cartItems,
         setCartItems,
         addToCart,

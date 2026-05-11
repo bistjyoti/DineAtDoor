@@ -1,101 +1,45 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useContext, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../context/StoreContext'
-import FoodItem from '../FoodItem/FoodItem'
-import axios from 'axios'
 import './Menu.css'
 
 const Menu = () => {
-    const { id } = useParams(); // URL se restaurant ID lene ke liye
-    const { restaurant_list, url } = useContext(StoreContext);
-    const [restaurant, setRestaurant] = useState(null);
-    const [restaurantMenu, setRestaurantMenu] = useState([]);
-    const [loadingMenu, setLoadingMenu] = useState(true);
-    const [categoryFilter, setCategoryFilter] = useState('All');
+    const { id } = useParams(); 
+    const navigate = useNavigate();
+    const { food_list, restaurant_list } = useContext(StoreContext);
 
-    useEffect(() => {
-        if (restaurant_list) {
-            const found = restaurant_list.find(item => item._id === id);
-            setRestaurant(found);
-        }
-    }, [id, restaurant_list]);
+    
+    console.log("URL ID:", id);
+    console.log("Sample Food Item Restaurant ID:", food_list[0]?.restaurant_id);
 
-    useEffect(() => {
-        axios.get(`${url}/api/restaurant/menu/${id}`)
-            .then(res => {
-                if (res.data.success) {
-                    setRestaurantMenu(res.data.data);
-                } else {
-                    setRestaurantMenu([]);
-                }
-                setLoadingMenu(false);
-            })
-            .catch(err => {
-                console.log(err);
-                setRestaurantMenu([]);
-                setLoadingMenu(false);
-            });
-    }, [id, url]);
+    const restaurant = restaurant_list?.find(res => String(res._id) === String(id));
 
-    useEffect(() => {
-        setCategoryFilter('All');
-    }, [restaurantMenu]);
-
-    if (!restaurant) return <div className='loader'>Loading...</div>;
-
-    const categories = [
-        'All',
-        ...Array.from(new Set(restaurantMenu.map((item) => item.category || 'Other')))
-    ];
-
-    const visibleMenu = restaurantMenu.filter((item) => {
-        const category = item.category || 'Other';
-        return categoryFilter === 'All' || category === categoryFilter;
-    });
+    
+    const restaurantMenu = food_list?.filter(item => String(item.restaurant_id) === String(id));
 
     return (
-        <div className='menu-page'>
-            <div className='menu-top'>
-                <img src={restaurant.image} alt={restaurant.name} />
-                <div className='menu-name-rating'>
-                    <h1>{restaurant.name}</h1>
-                    <p>⭐ {restaurant.rating || '4.0'}</p>
-                    <p>{restaurant.description || 'Delicious food available here.'}</p>
-                </div>
+        <div className='menu'>
+            <div className="menu-header">
+                <button onClick={() => navigate('/')} className="back-btn">← Back</button>
+                <h2>{restaurant ? restaurant.name : "Restaurant Menu"}</h2>
             </div>
 
-            {restaurantMenu.length > 0 && (
-                <div className='menu-categories'>
-                    {categories.map((cat) => (
-                        <button
-                            key={cat}
-                            className={categoryFilter === cat ? 'active-category' : ''}
-                            onClick={() => setCategoryFilter(cat)}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
-            )}
-
-            <div className='menu-items'>
-                {loadingMenu ? (
-                    <div className='loader'>Loading menu...</div>
-                ) : visibleMenu.length > 0 ? (
-                    visibleMenu.map((item, index) => (
-                        <FoodItem
-                            key={index}
-                            id={item._id}
-                            name={item.name}
-                            description={item.description}
-                            price={item.price}
-                            image={item.image}
-                        />
+            <div className="menu-list">
+                {restaurantMenu && restaurantMenu.length > 0 ? (
+                    restaurantMenu.map((item) => (
+                        <div key={item._id} className='menu-item'>
+                            <img src={item.image} alt="" onError={(e) => e.target.src="https://via.placeholder.com/150"}/>
+                            <div className="menu-item-info">
+                                <p><b>{item.name}</b></p>
+                                <p>₹{item.price}</p>
+                                <button className="add-btn">Add to Cart</button>
+                            </div>
+                        </div>
                     ))
                 ) : (
-                    <div className='no-dishes'>
-                        <h2>No dishes are available for this restaurant yet.</h2>
-                        <p>This restaurant does not have a menu in the database right now.</p>
+                    <div className="no-menu">
+                        <p>Oops! No dishes available for this restaurant</p>
+                        <small>Check if food_list items have restaurant_id matching with: {id}</small>
                     </div>
                 )}
             </div>
@@ -103,4 +47,4 @@ const Menu = () => {
     )
 }
 
-export default Menu
+export default Menu;

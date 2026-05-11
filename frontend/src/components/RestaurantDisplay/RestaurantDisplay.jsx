@@ -5,45 +5,62 @@ import './RestaurantDisplay.css'
 
 const RestaurantDisplay = ({ setSelectedRestaurant }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    // 💡 Context se restaurant_list nikal rahe hain
     const { restaurant_list } = useContext(StoreContext);
     const navigate = useNavigate();
 
-    // 🛡️ Safety check
-    if (!restaurant_list) {
-        return <div className="loader">Restaurants load ho rahe hain, sabar rakho partner... 🍕</div>;
+    // 🍕 Agar data load ho raha ho
+    if (!restaurant_list || restaurant_list.length === 0) {
+        return (
+            <div className="loader-container">
+                <div className="loader"></div>
+                <p>Finding the best restaurants for you... 🍽️</p>
+            </div>
+        );
     }
 
+    // 🚀 Navigation Logic
     const handleRestaurantClick = (id) => {
+        if (!id) return; // Safety check agar ID na mile
+        
         if (setSelectedRestaurant) {
             setSelectedRestaurant(id);
         }
+        // Restaurant ki ID ke saath Menu page par bheje ga
         navigate(`/menu/${id}`);
     }
 
-    const MAX_DISPLAY_DISTANCE = 12;
+    // 🔍 Search & Distance Logic
+    const MAX_DISTANCE = 15; 
     const searchLower = searchTerm.trim().toLowerCase();
+
     const filteredRestaurants = restaurant_list.filter((item) => {
-        if (item.distance > MAX_DISPLAY_DISTANCE) return false;
+        // Distance check: Agar distance mention hai toh filter karo, varna dikhao
+        const isNearby = item.distance ? item.distance <= MAX_DISTANCE : true;
+        
+        if (!isNearby) return false;
         if (!searchLower) return true;
-        const cuisineText = Array.isArray(item.cuisine) ? item.cuisine.join(' ') : item.cuisine || '';
+
+        // Search in Name, Location and Cuisines
+        const cuisineStr = Array.isArray(item.cuisine) ? item.cuisine.join(' ') : (item.cuisine || '');
+        
         return (
             item.name?.toLowerCase().includes(searchLower) ||
-            item.description?.toLowerCase().includes(searchLower) ||
             item.location?.toLowerCase().includes(searchLower) ||
-            cuisineText.toLowerCase().includes(searchLower)
+            cuisineStr.toLowerCase().includes(searchLower)
         );
     });
 
     return (
         <div className='restaurant-display' id='restaurant-display'>
             <div className="display-header">
-                <h2>Top Restaurants in Roorkee</h2>
-                <p>Delicious food available for delivery in your area! ✨</p>
+                <div className="header-text">
+                    <h2>Top Restaurants in Roorkee</h2>
+                    <p>Order from your favorite local spots! ✨</p>
+                </div>
                 <div className="restaurant-search">
                     <input
                         type="text"
-                        placeholder="Search restaurants, cuisines, location..."
+                        placeholder="Search for pizza, biryani, or restaurants..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -54,34 +71,49 @@ const RestaurantDisplay = ({ setSelectedRestaurant }) => {
                 {filteredRestaurants.length > 0 ? (
                     filteredRestaurants.map((item, index) => (
                         <div 
-                            key={index} 
+                            key={item._id || index} 
                             className='restaurant-card'
                             onClick={() => handleRestaurantClick(item._id)} 
                         >
                             <div className="img-container">
-                                <img src={item.image} alt={item.name} />
+                                <img 
+                                    src={item.image || "https://via.placeholder.com/300x200?text=Delicious+Food"} 
+                                    alt={item.name} 
+                                    // Agar image link dead hai toh fallback swiggy image dikhao
+                                    onError={(e) => { 
+                                        e.target.onerror = null; 
+                                        e.target.src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/e0vvp5vebill0idwt874"; 
+                                    }}
+                                />
                                 <div className="rating-badge">⭐ {item.rating || "4.0"}</div>
                             </div>
+
                             <div className="res-info">
-                                <h3>{item.name}</h3>
+                                <div className="res-name-row">
+                                    <h3>{item.name}</h3>
+                                </div>
                                 <p className="cuisines">
-                                    {Array.isArray(item.cuisine) ? item.cuisine.join(", ") : (item.description || "Street Food, Snacks")}
+                                    {Array.isArray(item.cuisine) && item.cuisine.length > 0 
+                                        ? item.cuisine.slice(0, 3).join(", ") 
+                                        : (item.description?.substring(0, 30) || "Fast Food, North Indian")}
                                 </p>
-                                <p className="location">
-                                    📍 {item.location || "Roorkee"}
-                                    {item.distance > 0 && (
-                                        <span className="distance"> • {item.distance} km away</span>
+                                <div className="res-footer">
+                                    <span className="location">📍 {item.location || "Roorkee"}</span>
+                                    {item.distance !== undefined && (
+                                        <span className="distance-tag">{item.distance} km</span>
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p>Oops! Koi restaurant search results mein nahi mila. Try a broader search.</p>
+                    <div className="no-results">
+                        <p>Oops! Is naam ka koi restaurant nahi mila. Kuch aur search karo? 🔍</p>
+                    </div>
                 )}
             </div>
         </div>
     )
 }
 
-export default RestaurantDisplay
+export default RestaurantDisplay;

@@ -15,7 +15,7 @@ export const connectDB = async () => {
         console.log("URI:", uri.replace(/:[^:]*@/, ":****@")); 
 
         await mongoose.connect(uri, {
-            dbName: "DineAtDoor", // ✅ Ab Compass mein 'DineAtDoor' naam ka database dikhega
+            dbName: "DineAtDoor", 
             serverSelectionTimeoutMS: 10000, 
             socketTimeoutMS: 45000,
             retryWrites: true,
@@ -25,11 +25,11 @@ export const connectDB = async () => {
         console.log("DB Connected Successfully ✅");
 
     } catch (err) {
-        console.log("DB Connection Error ❌");
+        console.log("DB Connection Error");
         console.error("Error Details:", err.message);
         
         if (err.message.includes("ECONNREFUSED")) {
-            console.log("\n⚠️  Possible fixes:");
+            console.log("\n Possible fixes:");
             console.log("1. Check if MongoDB Atlas cluster is PAUSED - Resume it");
             console.log("2. Whitelist your IP in MongoDB Atlas Network Access");
             console.log("3. Check your internet connection");
@@ -40,13 +40,13 @@ export const connectDB = async () => {
 };
 
 mongoose.connection.on("connected", () => {
-    console.log("Mongoose connected 🔗");
+    console.log("Mongoose connected");
 });
 
 mongoose.connection.on("error", (err) => {
-    console.log("Mongoose error 💥:", err);
+    console.log("Mongoose error:", err);
 });
 
 mongoose.connection.on("disconnected", () => {
-    console.log("Mongoose disconnected ⚠️");
+    console.log("Mongoose disconnected ");
 });

@@ -8,14 +8,13 @@ import orderRouter from './routes/orderRoute.js'
 import restaurantRouter from './routes/restaurantRoute.js' 
 import 'dotenv/config'
 
-// app config
 const app = express()
-const port = 4000
+const port = process.env.PORT || 4000 
 
-// middleware
+
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-app.use(cors())         
+app.use(cors())        
 
 
 app.use("/api/food", foodRouter)
@@ -29,24 +28,16 @@ app.get("/", (req, res) => {
     res.send("API working")
 })
 
-async function startServer() {
+// Database and Server Start
+const startServer = async () => {
     try {
         await connectDB() 
-        const server = app.listen(port, () => {
-            console.log(`Server started on http://localhost:${port} 🚀`)
+        app.listen(port, () => {
+            console.log(`Server started on http://localhost:${port}`)
             console.log("DineAtDoor is ready for action! ✅")
         })
-
-        server.on('error', (err) => {
-            if (err.code === 'EADDRINUSE') {
-                console.error(`❌ Port ${port} pehle se busy hai. Isse terminal se kill karo ya port change karo.`)
-            } else {
-                console.error('Server error:', err)
-            }
-            process.exit(1)
-        })
     } catch (err) {
-        console.log("Server Startup Error ❌:", err.message)
+        console.log("Server Startup Error:", err.message)
     }
 }
 

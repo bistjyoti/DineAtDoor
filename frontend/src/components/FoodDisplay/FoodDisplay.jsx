@@ -3,10 +3,35 @@ import { StoreContext } from '../context/StoreContext'
 import FoodItem from '../FoodItem/FoodItem'
 import './FoodDisplay.css'
 
-// 💡 Props mein 'selectedRestaurant' add kiya jo Home.jsx se aa raha hai
 const FoodDisplay = ({category, selectedRestaurant}) => {
 
     const { food_list } = useContext(StoreContext) 
+
+    const categoryKeywords = {
+        Salad: ['salad'],
+        Rolls: ['roll', 'wrap', 'shawarma', 'kathi'],
+        Deserts: ['dessert', 'sweet', 'ice cream', 'kulfi', 'pastry', 'cake', 'brownie'],
+        Sandwich: ['sandwich', 'burger'],
+        Cake: ['cake', 'pastry', 'brownie'],
+        'Pure Veg': ['veg', 'paneer', 'dal', 'chole', 'thali', 'sabzi'],
+        Pasta: ['pasta', 'spaghetti', 'macaroni', 'alfredo'],
+        Noodles: ['noodle', 'hakka', 'chowmein', 'ramen'],
+        Indian: ['indian', 'biryani', 'curry', 'masala', 'naan', 'roti', 'dosa', 'idli', 'thali']
+    };
+
+    const matchesCategory = (item, selectedCategory) => {
+        if (selectedCategory === "All") return true;
+        const selected = selectedCategory.toLowerCase();
+        const itemCategory = (item.category || '').toLowerCase();
+        const searchText = `${item.name || ''} ${item.description || ''} ${item.category || ''}`.toLowerCase();
+        const keywords = categoryKeywords[selectedCategory] || [selected];
+
+        return (
+            itemCategory === selected ||
+            itemCategory.includes(selected) ||
+            keywords.some((kw) => searchText.includes(kw))
+        );
+    };
 
     return (
         <div className='food-display' id='food-display'>
@@ -14,13 +39,12 @@ const FoodDisplay = ({category, selectedRestaurant}) => {
             <div className="food-display-list">
                 {food_list.map((item, index) => {
                     
-                    // 🎯 Logical Filtering:
-                    // 1. Check karo category 'All' hai ya match ho rahi hai.
-                    // 2. Check karo ki koi restaurant selected hai ya nahi.
-                    // 3. Agar selected hai, toh wahi dish dikhao jiska restaurantId match kare.
+                    const categoryMatch = matchesCategory(item, category);
                     
-                    const categoryMatch = category === "All" || item.category === category;
-                    const restaurantMatch = !selectedRestaurant || item.restaurantId === selectedRestaurant;
+                    const itemRestId = item.restaurantId?.toString();
+                    const selectedRestId = selectedRestaurant?.toString();
+                    
+                    const restaurantMatch = !selectedRestaurant || itemRestId === selectedRestId;
 
                     if (categoryMatch && restaurantMatch) {
                         return (
@@ -37,9 +61,12 @@ const FoodDisplay = ({category, selectedRestaurant}) => {
                     return null;
                 })}
             </div>
-            {/* 📝 Pro-tip: Agar filter ke baad koi dish na mile toh user ko batana achha rehta hai */}
-            {food_list.filter(item => (category === "All" || item.category === category) && (!selectedRestaurant || item.restaurantId === selectedRestaurant)).length === 0 && (
-                <p className="no-dishes">Oops! Is category mein abhi koi dish available nahi hai.</p>
+            {food_list.filter(item => {
+                const cMatch = matchesCategory(item, category);
+                const rMatch = !selectedRestaurant || item.restaurantId?.toString() === selectedRestaurant?.toString();
+                return cMatch && rMatch;
+            }).length === 0 && (
+                <p className="no-dishes">Oops! Is category mein abhi koi dish available nahi hai</p>
             )}
         </div>
     )

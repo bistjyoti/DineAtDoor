@@ -1,23 +1,20 @@
 import fs from 'fs'
 import foodModel from '../models/foodModel.js'
 
-// 🎯 1. Add Food Item (With Restaurant Connection)
+// 1. Add Food (Admin Panel ke liye)
 const addFood = async (req, res) => {
-
-    // Multer se aayi hui image filename
-    let image_filename = `${req.file.filename}`;
-
-    const food = new foodModel({
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        category: req.body.category,
-        image: image_filename,
-        // ✨ NEW: Restaurant ID connect karna zaroori hai
-        restaurantId: req.body.restaurantId 
-    })
-
     try {
+        let image_filename = `${req.file.filename}`;
+
+        const food = new foodModel({
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            category: req.body.category,
+            image: image_filename,
+            restaurantId: req.body.restaurantId 
+        })
+
         await food.save();
         res.json({ success: true, message: 'Food Added Successfully!' })
     } catch (error) {
@@ -26,7 +23,7 @@ const addFood = async (req, res) => {
     }
 }
 
-// 🎯 2. List All Food (Universal List)
+// 2. List All Foods (Pure database ki list)
 const listFood = async (req, res) => {
     try {
         const foods = await foodModel.find({});
@@ -37,16 +34,15 @@ const listFood = async (req, res) => {
     }
 }
 
-// 🎯 3. Remove Food Item (With Image Cleanup)
+// 3. Remove Food
 const removeFood = async (req, res) => {
     try {
-        // Pehle product dhoondo taaki image file delete kar sakein
         const food = await foodModel.findById(req.body.id);
         
-        // Folder se physical file delete karna
-        if (food) {
+        if (food && !food.image.startsWith('http')) {
+            // Local image delete karo (Swiggy wali nahi)
             fs.unlink(`uploads/${food.image}`, (err) => {
-                if (err) console.log("Image delete nahi ho payi:", err);
+                if (err) console.log("Image file not found locally, skipping delete.");
             })
         }
 
@@ -58,12 +54,28 @@ const removeFood = async (req, res) => {
     }
 }
 
-// 🎯 4. Get Menu by Restaurant (Zomato Flow ke liye sabse important)
+// 4. Get Restaurant Menu (Fixed logic for Swiggy data)
 const getRestaurantMenu = async (req, res) => {
     try {
-        const { restaurantId } = req.query; // Frontend se ?restaurantId=... aayega
-        const dishes = await foodModel.find({ restaurantId: restaurantId });
-        res.json({ success: true, data: dishes });
+        // Frontend se ya toh ?restaurantId=... aayega ya ?id=...
+        const { restaurantId, id } = req.query;
+        const finalId = restaurantId || id;
+
+        if (!finalId) {
+            return res.json({ success: false, message: "Restaurant ID provide karein query mein" });
+        }
+
+        console.log("🔍 Fetching menu for ID:", finalId);
+
+        // Database mein search karo
+        const dishes = await foodModel.find({ restaurantId: finalId });
+
+        console.log(`✅ Result: ${dishes.length} dishes found.`);
+
+        res.json({ 
+            success: true, 
+            data: dishes 
+        });
     } catch (error) {
         console.log("❌ Menu Fetch Error:", error);
         res.json({ success: false, message: "Menu load nahi ho paya" });

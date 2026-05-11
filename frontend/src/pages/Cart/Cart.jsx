@@ -19,7 +19,8 @@ const Cart = ({ setShowLogin }) => {
   const startCamera = async () => {
     if (!token) {
       alert("🚨 Access Denied! Please Sign In first.");
-      setShowLogin(true);
+      if (setShowLogin) setShowLogin(true);
+      else navigate('/');
       return;
     }
     if (getTotalCartAmount() === 0) return;

@@ -6,13 +6,20 @@ import { StoreContext } from '../context/StoreContext';
 
 const Navbar = ({ setShowLogin }) => {
 
+  const isValidJwt = (token) => {
+    return typeof token === 'string' && token.split('.').length === 3 && token !== 'undefined' && token !== 'null';
+  };
+
   const [menu, setMenu] = useState('home');
   const { getTotalCartAmount, token, setToken, currentLocation, setCurrentLocation, setLocationCoords } = useContext(StoreContext);
-  const isLoggedIn = !!token || localStorage.getItem("isLoggedIn") === "true";
+  const storedToken = localStorage.getItem("token");
+  const isLoggedIn = !!token || isValidJwt(storedToken || "");
   const storedUserName = localStorage.getItem("userName") || "";
   const navigate = useNavigate();
 
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [locationStatus, setLocationStatus] = useState("idle");
+  const [locationHelpText, setLocationHelpText] = useState("");
   
   const [detailedAddress, setDetailedAddress] = useState({
     houseNo: "",
@@ -26,95 +33,120 @@ const Navbar = ({ setShowLogin }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  const reverseGeocode = async (latitude, longitude) => {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&extratags=1`);
+    const data = await res.json();
+    const address = data.address || {};
+    const displayName = data.display_name || '';
+
+    const houseNumber = address.house_number || '';
+    const road = address.road || address.pedestrian || address.path || '';
+    const suburb = address.suburb || address.neighbourhood || address.residential || '';
+    const city = address.city || address.town || address.village || address.municipality || "Roorkee";
+    const district = address.county || address.state_district || '';
+    const state = address.state || "Uttarakhand";
+
+    let locationParts = [];
+    if (houseNumber && road) locationParts.push(`${houseNumber}, ${road}`);
+    else if (road) locationParts.push(road);
+    if (suburb && suburb !== road) locationParts.push(suburb);
+    if (city) locationParts.push(city);
+    if (district && district !== city && district !== state) locationParts.push(district);
+    if (state) locationParts.push(state);
+
+    if (locationParts.length >= 2) return `${locationParts.join(', ')} 📍`;
+    const parts = displayName.split(', ');
+    if (parts.length >= 3) return `${parts.slice(0, Math.min(4, parts.length)).join(', ')} 📍`;
+    return `${displayName || `${city}, ${state}`} 📍`;
+  };
+
+  const applyLiveCoords = async (latitude, longitude) => {
+    setLocationCoords({ lat: latitude, lng: longitude });
+    try {
+      const finalAddr = await reverseGeocode(latitude, longitude);
+      setPermanentLocation(finalAddr);
+      setLocationHelpText("Live location updated successfully.");
+    } catch (err) {
+      console.warn("Reverse geocoding failed:", err);
+      setPermanentLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)} 📍`);
+      setLocationHelpText("Live coordinates captured. Address lookup was limited.");
+    }
+    setShowLocationModal(false);
+  };
+
+  const tryIpBasedFallback = async () => {
+    try {
+      const ipRes = await fetch("https://ipapi.co/json/");
+      const ipData = await ipRes.json();
+      if (ipData?.latitude && ipData?.longitude) {
+        await applyLiveCoords(Number(ipData.latitude), Number(ipData.longitude));
+        setLocationStatus("granted");
+        setLocationHelpText("Approximate live location detected via network.");
+        return true;
+      }
+    } catch (e) {
+      console.warn("IP fallback failed:", e);
+    }
+    return false;
+  };
+
   // --- 🎯 1. DYNAMIC AUTO DETECT (Ab ye puri duniya mein har jagah kaam karega!) ---
-  const detectLocationSmart = () => {
-    setCurrentLocation("Detecting... ⏳");
-    if(showLocationModal) setShowLocationModal(false);
+  const detectLocationSmart = async () => {
+    setLocationStatus("detecting");
+    setLocationHelpText("");
+    setCurrentLocation("Detecting live location... ⏳");
 
     if (!navigator.geolocation) {
-      setPermanentLocation("Roorkee, Uttarakhand 📍");
+      setLocationStatus("denied");
+      setCurrentLocation("Location unsupported - use manual address 📍");
+      setLocationHelpText("Your browser does not support geolocation. Please set location manually.");
       return;
+    }
+
+    // Check permission state first so we can show correct UX.
+    if (navigator.permissions?.query) {
+      try {
+        const permission = await navigator.permissions.query({ name: "geolocation" });
+        if (permission.state === "denied") {
+          setLocationStatus("denied");
+          setCurrentLocation("Location blocked - allow in browser settings 🔒");
+          setLocationHelpText("Location access is blocked for this site. Please click the lock icon near URL -> Site settings -> Allow location, then retry.");
+          return;
+        }
+      } catch (err) {
+        console.warn("Permission query failed:", err);
+      }
     }
 
     navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
-      setLocationCoords({ lat: latitude, lng: longitude });
-      try {
-        // Enhanced reverse geocoding with more detailed address parsing
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&extratags=1`);
-        const data = await res.json();
-
-        // More comprehensive address parsing
-        const address = data.address || {};
-        const displayName = data.display_name || '';
-
-        // Extract detailed components
-        const houseNumber = address.house_number || '';
-        const road = address.road || address.pedestrian || address.path || '';
-        const suburb = address.suburb || address.neighbourhood || address.residential || '';
-        const city = address.city || address.town || address.village || address.municipality || "Roorkee";
-        const district = address.county || address.state_district || '';
-        const state = address.state || "Uttarakhand";
-        const postcode = address.postcode || '';
-
-        // Build a more precise location string
-        let locationParts = [];
-
-        // Add house number and road if available
-        if (houseNumber && road) {
-          locationParts.push(`${houseNumber}, ${road}`);
-        } else if (road) {
-          locationParts.push(road);
-        }
-
-        // Add suburb/area
-        if (suburb && suburb !== road) {
-          locationParts.push(suburb);
-        }
-
-        // Add city
-        if (city) {
-          locationParts.push(city);
-        }
-
-        // Add district if different from city
-        if (district && district !== city && district !== state) {
-          locationParts.push(district);
-        }
-
-        // Add state
-        if (state) {
-          locationParts.push(state);
-        }
-
-        // If we have very detailed info, use it; otherwise fall back to display_name parsing
-        let finalAddr;
-        if (locationParts.length >= 2) {
-          finalAddr = locationParts.join(', ') + ' 📍';
-        } else {
-          // Parse display_name for better formatting
-          const parts = displayName.split(', ');
-          if (parts.length >= 3) {
-            // Take first 3-4 parts for meaningful address
-            finalAddr = parts.slice(0, Math.min(4, parts.length)).join(', ') + ' 📍';
-          } else {
-            finalAddr = displayName + ' 📍';
+      setLocationStatus("granted");
+      await applyLiveCoords(latitude, longitude);
+    }, (error) => {
+      setLocationStatus("denied");
+      if (error?.code === 1) {
+        setCurrentLocation("Location blocked - choose manual or allow access 🔒");
+        setLocationHelpText("Location permission is blocked. Allow location in browser settings or use manual address.");
+      } else if (error?.code === 2) {
+        setCurrentLocation("Trying network-based location... ⏳");
+        setLocationHelpText("Device GPS unavailable. Trying approximate live location via network.");
+        tryIpBasedFallback().then((ok) => {
+          if (!ok) {
+            setCurrentLocation("Location unavailable - try manual address 📍");
+            setLocationHelpText("Could not fetch location automatically. Please use manual address.");
           }
-        }
-
-        // Ensure we have at least city and state
-        if (!finalAddr.includes(city) && !finalAddr.includes(state)) {
-          finalAddr = `${city}, ${state} 📍`;
-        }
-
-        setPermanentLocation(finalAddr);
-      } catch (err) {
-        console.warn("Reverse geocoding failed:", err);
-        setPermanentLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)} 📍`);
+        });
+      } else {
+        setCurrentLocation("Location timeout - trying fallback... ⏳");
+        setLocationHelpText("GPS request timed out. Trying approximate network location.");
+        tryIpBasedFallback().then((ok) => {
+          if (!ok) {
+            setCurrentLocation("Location timeout - try again or use manual 📍");
+            setLocationHelpText("Location request timed out. Please retry or enter address manually.");
+          }
+        });
       }
-    }, () => {
-      setPermanentLocation("Location access denied 🔒");
-    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }); // 15s timeout, 5min cache
+    }, { enableHighAccuracy: false, timeout: 25000, maximumAge: 600000 });
   }
 
   const setPermanentLocation = (address) => {
@@ -122,16 +154,25 @@ const Navbar = ({ setShowLogin }) => {
     localStorage.setItem("savedLocation", address);
   }
 
-  const isValidJwt = (token) => {
-    return typeof token === 'string' && token.split('.').length === 3 && token !== 'undefined' && token !== 'null';
-  };
-
   useEffect(() => {
     const savedLoc = localStorage.getItem("savedLocation");
     const savedCoords = localStorage.getItem("savedLocationCoords");
+    const hasFailedLocationText = (value = "") => {
+      const v = value.toLowerCase();
+      return (
+        v.includes("location access denied") ||
+        v.includes("location blocked") ||
+        v.includes("location unavailable") ||
+        v.includes("location timeout") ||
+        v.includes("detecting")
+      );
+    };
 
-    if (savedLoc) {
+    if (savedLoc && !hasFailedLocationText(savedLoc)) {
       setCurrentLocation(savedLoc);
+    } else if (savedLoc && hasFailedLocationText(savedLoc)) {
+      localStorage.removeItem("savedLocation");
+      setCurrentLocation("Set delivery location 📍");
     }
 
     if (savedCoords) {
@@ -142,16 +183,18 @@ const Navbar = ({ setShowLogin }) => {
       }
     }
 
-    if (!savedLoc && !savedCoords) {
-      // Agar pehli baar khul raha hai toh detect karo
-      detectLocationSmart();
+    if ((!savedLoc || hasFailedLocationText(savedLoc)) && !savedCoords) {
+      // Auto-detect on load mat karo; user click par permission prompt trigger hoga.
+      setCurrentLocation("Set delivery location 📍");
     }
     
-    const storedToken = localStorage.getItem("token");
-    if (storedToken && isValidJwt(storedToken)) {
-      setToken(storedToken);
-    } else if (storedToken) {
+    const tokenFromStorage = localStorage.getItem("token");
+    if (tokenFromStorage && isValidJwt(tokenFromStorage)) {
+      setToken(tokenFromStorage);
+    } else if (tokenFromStorage) {
       localStorage.removeItem("token");
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userName");
       setToken("");
     }
   }, [setToken, setLocationCoords]); 
@@ -222,6 +265,8 @@ const Navbar = ({ setShowLogin }) => {
         setLocationCoords(coords);
       }
 
+      setLocationStatus("manual");
+      setLocationHelpText("Manual address saved.");
       setShowLocationModal(false);
       setDetailedAddress({ houseNo: "", area: "", landmark: "", city: "Roorkee", latitude: 29.8543, longitude: 77.8880 });
     } else {
@@ -302,6 +347,11 @@ const Navbar = ({ setShowLogin }) => {
             </span>
 
             <h3 style={{marginBottom: '15px', color: '#49557e', textAlign: 'center'}}>Select Delivery Location</h3>
+            {locationHelpText && (
+              <p style={{fontSize: '12px', marginBottom: '10px', color: locationStatus === "denied" ? '#d9534f' : '#4a5568'}}>
+                {locationHelpText}
+              </p>
+            )}
 
             <button 
               onClick={detectLocationSmart}
