@@ -27,7 +27,7 @@ const foodSchema = new mongoose.Schema({
     }
 }, { timestamps: true }); 
 
-// Models check karke export kar rahe hain
+
 const foodModel = mongoose.models.food || mongoose.model("food", foodSchema);
 
 export default foodModel;

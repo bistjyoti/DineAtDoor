@@ -1,80 +1,159 @@
 .menu-page {
-    padding: 30px 5%;
-    max-width: 1180px;
-    margin: 0 auto;
+    margin: 20px auto;
+    width: 70%; 
+    min-height: 100vh;
 }
 
-.menu-top {
+/* Restaurant Info Section */
+.menu-header {
     display: flex;
-    gap: 25px;
+    gap: 40px;
     align-items: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px dashed #d3d3d3;
 }
 
-.menu-top img {
-    width: 220px;
-    height: 220px;
+.res-main-img {
+    width: 280px;
+    height: 180px;
     object-fit: cover;
-    border-radius: 20px;
-    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.menu-name-rating {
-    flex: 1;
-    min-width: 240px;
+.menu-header-right h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #282c3f;
+    margin-bottom: 10px;
 }
 
-.menu-name-rating h1 {
-    margin-bottom: 12px;
-    font-size: 2rem;
-}
-
-.menu-name-rating p {
-    color: #4f4f4f;
-    line-height: 1.6;
-}
-
-.menu-categories {
+/* Category Filter Buttons */
+.menu-categories-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 25px;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: none; 
+    border-bottom: 1px solid #f1f1f6;
 }
 
-.menu-categories button {
-    border: 1px solid #dcdcdc;
-    background: #fff;
-    color: #333;
-    padding: 10px 18px;
-    border-radius: 999px;
+.category-btn {
+    padding: 10px 24px;
+    border: 1px solid #e9e9eb;
+    border-radius: 20px;
+    background: white;
+    font-weight: 600;
+    color: #686b78;
     cursor: pointer;
-    transition: all 0.2s ease;
+    white-space: nowrap;
+    transition: 0.3s ease;
 }
 
-.menu-categories button:hover,
-.menu-categories button.active-category {
-    background: #ff4c24;
+.category-btn.active, .category-btn:hover {
+    background-color: #3e4152;
     color: white;
-    border-color: #ff4c24;
+    border-color: #3e4152;
 }
 
-.menu-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 24px;
+/* Dishes List Layout */
+.food-display-list {
+    display: flex;
+    flex-direction: column; 
+    gap: 0;
+    margin-top: 20px;
 }
 
-.no-dishes {
-    padding: 40px;
-    text-align: center;
-    color: #555;
-    border: 1px dashed #d6d6d6;
-    border-radius: 22px;
+/* Individual Dish Row Alignment */
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Isse content upar se align hoga, clean lagega */
+    padding: 30px 0;
+    border-bottom: 1px solid #e9e9eb;
+    gap: 50px;
+    min-height: 160px; /* Ek standard height fixed rahegi */
 }
 
-.loader {
-    text-align: center;
-    color: #333;
-    padding: 40px 0;
+.menu-item-info {
+    flex: 1;
+}
+
+.menu-item-info b {
+    font-size: 1.15rem;
+    color: #3e4152;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.menu-item-info .price {
+    font-weight: 600;
+    color: #3e4152;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 0.95rem;
+}
+
+/* ✨ Description Fix: Sirf 2 lines dikhayega */
+.menu-item-info .description {
+    font-size: 0.9rem;
+    color: rgba(40, 44, 63, 0.45);
+    line-height: 1.4;
+    max-width: 80%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Yeh magic line hai */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Right Side Image & Button Container */
+.menu-item-image-container {
+    position: relative;
+    width: 155px;
+    height: 120px;
+    flex-shrink: 0; /* Image choti na ho alignment ke liye */
+}
+
+.menu-item-image-container img {
+    width: 155px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.add-btn {
+    position: absolute;
+    bottom: -15px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #60b246; 
+    border: 1px solid #d4d5d9;
+    padding: 8px 30px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+
+.add-btn:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 768px) {
+    .menu-page { width: 92%; }
+    .menu-header { flex-direction: column; text-align: center; gap: 20px; }
+    .res-main-img { width: 100%; height: 200px; }
+    .menu-item { gap: 15px; padding: 25px 0; }
+    .menu-item-info .description { max-width: 100%; }
+    .menu-item-image-container { width: 120px; height: 100px; }
+    .menu-item-image-container img { width: 120px; height: 100px; }
+    .add-btn { padding: 6px 20px; }
 }

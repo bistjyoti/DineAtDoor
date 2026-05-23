@@ -4,8 +4,6 @@ import foodModel from "../models/foodModel.js";
 
 const DEFAULT_LAT = 29.8543;
 const DEFAULT_LNG = 77.8880;
-
-// Haversine formula to calculate distance
 const getDistanceKm = (lat1, lng1, lat2, lng2) => {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -17,7 +15,7 @@ const getDistanceKm = (lat1, lng1, lat2, lng2) => {
     return R * c;
 };
 
-// Helper to extract restaurants from complex Swiggy JSON
+
 const getRestaurantsFromSwiggyData = (data) => {
     const cards = data?.data?.cards || [];
     const matches = [];
@@ -59,21 +57,20 @@ const makeFallbackMenuForRestaurant = (restaurant) => {
     ];
 };
 
-// --- Controllers ---
 
 const addRestaurant = async (req, res) => {
     try {
         const newRestaurant = new restaurantModel(req.body);
         await newRestaurant.save();
-        res.json({ success: true, message: "Restaurant Added Successfully ✅" });
-    } catch (error) { res.json({ success: false, message: "Error adding restaurant ❌" }); }
+        res.json({ success: true, message: "Restaurant Added Successfully" });
+    } catch (error) { res.json({ success: false, message: "Error adding restaurant " }); }
 };
 
 const listRestaurants = async (req, res) => {
     try {
         const restaurants = await restaurantModel.find({});
         res.json({ success: true, data: restaurants });
-    } catch (error) { res.json({ success: false, message: "Error fetching data ❌" }); }
+    } catch (error) { res.json({ success: false, message: "Error fetching data " }); }
 };
 
 const fetchLiveRestaurants = async (req, res) => {
@@ -201,7 +198,6 @@ const syncAllRestaurantMenus = async (req, res) => {
 };
 
 const syncMissingRestaurantMenus = async (req, res) => {
-    // Already covered in syncAll but kept for compatibility
     await syncAllRestaurantMenus(req, res);
 };
 

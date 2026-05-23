@@ -1,7 +1,6 @@
 import fs from 'fs'
 import foodModel from '../models/foodModel.js'
 
-// 1. Add Food (Admin Panel ke liye)
 const addFood = async (req, res) => {
     try {
         let image_filename = `${req.file.filename}`;
@@ -18,29 +17,28 @@ const addFood = async (req, res) => {
         await food.save();
         res.json({ success: true, message: 'Food Added Successfully!' })
     } catch (error) {
-        console.log("❌ Add Food Error:", error)
+        console.log("Add Food Error:", error)
         res.json({ success: false, message: 'Error adding food' })
     }
 }
 
-// 2. List All Foods (Pure database ki list)
+
 const listFood = async (req, res) => {
     try {
         const foods = await foodModel.find({});
         res.json({ success: true, data: foods })
     } catch (error) {
-        console.log("❌ List Food Error:", error)
+        console.log("List Food Error:", error)
         res.json({ success: false, message: 'Error fetching list' })
     }
 }
 
-// 3. Remove Food
+
 const removeFood = async (req, res) => {
     try {
         const food = await foodModel.findById(req.body.id);
         
         if (food && !food.image.startsWith('http')) {
-            // Local image delete karo (Swiggy wali nahi)
             fs.unlink(`uploads/${food.image}`, (err) => {
                 if (err) console.log("Image file not found locally, skipping delete.");
             })
@@ -49,15 +47,14 @@ const removeFood = async (req, res) => {
         await foodModel.findByIdAndDelete(req.body.id);
         res.json({ success: true, message: 'Food Removed' })
     } catch (error) {
-        console.log("❌ Remove Food Error:", error)
+        console.log("Remove Food Error:", error)
         res.json({ success: false, message: 'Error removing food' })
     }
 }
 
-// 4. Get Restaurant Menu (Fixed logic for Swiggy data)
+
 const getRestaurantMenu = async (req, res) => {
     try {
-        // Frontend se ya toh ?restaurantId=... aayega ya ?id=...
         const { restaurantId, id } = req.query;
         const finalId = restaurantId || id;
 
@@ -65,19 +62,16 @@ const getRestaurantMenu = async (req, res) => {
             return res.json({ success: false, message: "Restaurant ID provide karein query mein" });
         }
 
-        console.log("🔍 Fetching menu for ID:", finalId);
-
-        // Database mein search karo
+        console.log("Fetching menu for ID:", finalId);
         const dishes = await foodModel.find({ restaurantId: finalId });
-
-        console.log(`✅ Result: ${dishes.length} dishes found.`);
+        console.log(`Result: ${dishes.length} dishes found.`);
 
         res.json({ 
             success: true, 
             data: dishes 
         });
     } catch (error) {
-        console.log("❌ Menu Fetch Error:", error);
+        console.log("Menu Fetch Error:", error);
         res.json({ success: false, message: "Menu load nahi ho paya" });
     }
 }

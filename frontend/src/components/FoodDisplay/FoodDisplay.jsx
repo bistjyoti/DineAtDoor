@@ -7,30 +7,31 @@ const FoodDisplay = ({category, selectedRestaurant}) => {
 
     const { food_list } = useContext(StoreContext) 
 
-    const categoryKeywords = {
-        Salad: ['salad'],
-        Rolls: ['roll', 'wrap', 'shawarma', 'kathi'],
-        Deserts: ['dessert', 'sweet', 'ice cream', 'kulfi', 'pastry', 'cake', 'brownie'],
-        Sandwich: ['sandwich', 'burger'],
-        Cake: ['cake', 'pastry', 'brownie'],
-        'Pure Veg': ['veg', 'paneer', 'dal', 'chole', 'thali', 'sabzi'],
-        Pasta: ['pasta', 'spaghetti', 'macaroni', 'alfredo'],
-        Noodles: ['noodle', 'hakka', 'chowmein', 'ramen'],
-        Indian: ['indian', 'biryani', 'curry', 'masala', 'naan', 'roti', 'dosa', 'idli', 'thali']
-    };
-
     const matchesCategory = (item, selectedCategory) => {
         if (selectedCategory === "All") return true;
-        const selected = selectedCategory.toLowerCase();
-        const itemCategory = (item.category || '').toLowerCase();
-        const searchText = `${item.name || ''} ${item.description || ''} ${item.category || ''}`.toLowerCase();
-        const keywords = categoryKeywords[selectedCategory] || [selected];
+        
+        const selected = selectedCategory.toLowerCase().trim();
+        const itemCategory = (item.category || '').toLowerCase().trim();
+        const itemName = (item.name || '').toLowerCase().trim();
+        
+        if (selected === 'deserts' && (itemCategory === 'desserts' || itemCategory === 'dessert' || itemCategory === 'sweets & snacks')) return true;
+        if (selected === 'indian' && (itemCategory === 'indian' || itemCategory === 'north indian' || itemCategory === 'south indian' || itemCategory === 'mughlai' || itemCategory === 'biryani')) return true;
+        if (selected === 'burgers' && (itemCategory === 'burgers' || itemCategory === 'chicken & burgers')) return true;
+        if (selected === 'rolls' && (itemCategory === 'rolls' || itemCategory === 'rolls & momos' || itemCategory === 'fast food')) return true;
 
-        return (
-            itemCategory === selected ||
-            itemCategory.includes(selected) ||
-            keywords.some((kw) => searchText.includes(kw))
-        );
+        if (selected === 'salad') {
+            return itemCategory === 'salad' || itemName.includes('salad') || itemName.includes('raita') || itemName.includes('papad');
+        }
+        
+        if (selected === 'sandwich') {
+            return itemCategory === 'sandwich' || itemName.includes('sandwich') || itemName.includes('toast') || itemName.includes('burger');
+        }
+
+        if (selected === 'pure veg') {
+            return itemCategory === 'pure veg' || itemName.includes('veg') || itemName.includes('paneer') || itemName.includes('dal') || itemName.includes('chole');
+        }
+
+        return itemCategory === selected || itemCategory.includes(selected) || itemName.includes(selected);
     };
 
     return (
@@ -40,10 +41,8 @@ const FoodDisplay = ({category, selectedRestaurant}) => {
                 {food_list.map((item, index) => {
                     
                     const categoryMatch = matchesCategory(item, category);
-                    
                     const itemRestId = item.restaurantId?.toString();
                     const selectedRestId = selectedRestaurant?.toString();
-                    
                     const restaurantMatch = !selectedRestaurant || itemRestId === selectedRestId;
 
                     if (categoryMatch && restaurantMatch) {

@@ -8,62 +8,63 @@ const FoodItem = ({ id, name, price, description, image, isRestaurant }) => {
   const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
   const navigate = useNavigate();
 
-  // Jab koi card par click karega
   const handleItemClick = () => {
     if (isRestaurant) {
        console.log("Restaurant Clicked:", name);
-       // Agar tumne Restaurant detail page banaya hai toh niche wali line uncomment kar dena:
-       // navigate(`/restaurant/${id}`); 
     }
   };
 
   return (
     <div className="food-item" onClick={handleItemClick} style={{ cursor: isRestaurant ? "pointer" : "default" }}>
-      <div className="food-item-img-container">
-        <img src={image} className="food-item-image" alt={name} />
-
-        {/* Counter Buttons: Ye sirf tab dikhenge agar hum cart me add karna chahte hain */}
-        {!cartItems[id] ? (
-          <img
-            className="add"
-            src={assets.add_icon_white}
-            onClick={(e) => {
-                e.stopPropagation(); // Taaki click sirf button par ho, poore card par nahi
-                addToCart(id);
-            }}
-            alt=""
-          />
-        ) : (
-          <div className="food-item-counter" onClick={(e) => e.stopPropagation()}>
-            <img
-              onClick={() => removeFromCart(id)}
-              src={assets.remove_icon_red}
-              alt=""
-            />
-            <p>{cartItems[id]}</p>
-            <img
-              onClick={() => addToCart(id)}
-              src={assets.add_icon_green}
-              alt=""
-            />
-          </div>
-        )}
-      </div>
-
       <div className="food-item-info">
         <div className="food-item-name-rating">
-          <p>{name}</p>
+          <p className="food-item-name">{name}</p>
           <div className="star">
             <img src={assets.rating_starts} alt="" />
           </div>
         </div>
         
-        {/* Description: Isko humne limit kar diya taaki card ki height barabar rahe */}
         <p className="food-item-desc">
             {description.length > 50 ? description.slice(0, 50) + "..." : description}
         </p>
         
         <p className="food-item-price">₹{price}</p>
+      </div>
+
+      <div className="food-item-img-container">
+        <img 
+          src={image} 
+          className="food-main-img" 
+          alt={name} 
+          onError={(e) => {
+            const lowerName = name.toLowerCase();
+            if (lowerName.includes("cake") || lowerName.includes("velvet") || lowerName.includes("waffle") || lowerName.includes("dry cake")) {
+              e.target.src = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&auto=format&fit=crop&q=60";
+            } else if (lowerName.includes("burger")) {
+              e.target.src = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&auto=format&fit=crop&q=60";
+            } else {
+              e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&auto=format&fit=crop&q=60";
+            }
+          }}
+        />
+
+        {!cartItems[id] ? (
+          <button
+            className="add-btn-premium"
+            onClick={(e) => {
+                e.stopPropagation();
+                addToCart(id);
+            }}
+          >
+            ADD
+          </button>
+        ) : (
+          <div className="food-item-counter-premium" onClick={(e) => e.stopPropagation()}>
+            <span className="counter-minus" onClick={() => removeFromCart(id)}>-</span>
+            <span className="counter-number">{cartItems[id]}</span>
+            <span className="counter-plus" onClick={() => addToCart(id)}>+</span>
+          </div>
+        )}
       </div>
     </div>
   );

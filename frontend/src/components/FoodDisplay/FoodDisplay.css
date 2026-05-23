@@ -1,16 +1,98 @@
-.food-display{
+.food-display {
     margin-top: 30px;
+    padding: 0 20px;
 }
 
-.food-display h2{
-    font-size: max(2vw,24px);
+.food-display h2 {
+    font-size: max(2vw, 24px);
     font-weight: 600;
+    color: #3e4152;
+    margin-bottom: 20px;
 }
 
-.food-display-list{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
-    margin-top: 30px;
-    gap: 30px;
-    row-gap: 50px;
+.food-display-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 850px;
+    margin: 30px auto 0 auto;
+    gap: 0;
+}
+
+.food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid #e9e9eb;
+    background: #fff;
+    gap: 40px;
+    width: 100%;
+}
+
+.food-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.food-item-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #3e4152;
+}
+
+.food-item-price {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #3e4152;
+}
+
+.food-item-desc {
+    font-size: 0.88rem;
+    color: #7e808c;
+    line-height: 1.4;
+}
+
+.food-item-img-container {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    flex-shrink: 0;
+}
+
+.food-item-img-container > img:first-of-type {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.food-item-counter, 
+.food-item-img-container .add,
+.food-item-img-container img.add {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px !important;
+    height: 32px !important;
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+    font-weight: 700;
+    color: #fc8019;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.food-item-counter img,
+.food-item-img-container .add img {
+    width: 16px !important;
+    height: 16px !important;
+    object-fit: contain;
 }

@@ -11,11 +11,9 @@ import 'dotenv/config'
 const app = express()
 const port = process.env.PORT || 4000 
 
-
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(cors())        
-
 
 app.use("/api/food", foodRouter)
 app.use("/api/user", userRouter)
@@ -28,7 +26,6 @@ app.get("/", (req, res) => {
     res.send("API working")
 })
 
-// Database and Server Start
 const startServer = async () => {
     try {
         await connectDB() 
@@ -37,7 +34,8 @@ const startServer = async () => {
             console.log("DineAtDoor is ready for action! ✅")
         })
     } catch (err) {
-        console.log("Server Startup Error:", err.message)
+        console.error("Server Startup Error:", err.message)
+        process.exit(1)
     }
 }
 

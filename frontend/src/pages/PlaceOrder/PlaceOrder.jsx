@@ -28,7 +28,6 @@ const PlaceOrder = () => {
     setData(data => ({ ...data, [name]: value }))
   }
 
-  // --- 🎯 SWIGGY JAISA LIVE LOCATION TRACE ---
   const traceLocation = () => {
     setLoadingLocation(true);
     if (!navigator.geolocation) {
@@ -41,14 +40,12 @@ const PlaceOrder = () => {
       const { latitude, longitude } = position.coords;
 
       try {
-        // Coordinates ko real address mein convert karne ke liye API
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
         );
         const resData = await response.json();
         const address = resData.address;
         
-        // Form ke andar automatically details fill ho jayengi
         setData(prev => ({
           ...prev,
           street: address.suburb || address.neighbourhood || address.road || "Near IIT Roorkee",
@@ -58,12 +55,11 @@ const PlaceOrder = () => {
           country: address.country || "India"
         }));
 
-        // Roorkee check
         const fullAddress = resData.display_name.toLowerCase();
         if (fullAddress.includes("roorkee")) {
-          alert("📍 Location traced successfully! Roorkee location detected. 🥳");
+          alert("Location traced successfully! Roorkee location detected");
         } else {
-          alert("📍 Location traced successfully! Form autofilled.");
+          alert("Location traced successfully! Form autofilled.");
         }
 
       } catch (error) {
@@ -77,28 +73,36 @@ const PlaceOrder = () => {
   };
 
   const placeOrder = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); 
+    
     let orderItems = [];
-    food_list.map((item, index) => {
+    food_list.forEach((item) => {
       if (cartItems[item._id] > 0) {
-        let itemInfo = item;
+        let itemInfo = { ...item }; 
         itemInfo["quantity"] = cartItems[item._id];
         orderItems.push(itemInfo);
       }
-    })
+    });
+
     let orderData = {
       address: data,
       items: orderItems,
-      amount: getTotalCartAmount() + 2,
+      amount: getTotalCartAmount() , 
     }
 
-    let response = await axios.post(url + '/api/order/place', orderData, { headers: { token } })
-    if (response.data.success) {
-      const { session_url } = response.data;
-      window.location.replace(session_url);
-    }
-    else {
-      alert('Error')
+    try {
+      let response = await axios.post(url + '/api/order/place', orderData, { headers: { token } });
+      
+      if (response.data.success) {
+        const { session_url } = response.data;
+  
+        window.location.replace(session_url);
+      } else {
+        alert("Error: " + (response.data.message || "Backend payment integration failed or declined."));
+      }
+    } catch (err) {
+      console.error("Order context processing crashed:", err);
+      alert("Something went wrong with the payment request. Please verify your backend server is running.");
     }
   }
 
@@ -108,14 +112,14 @@ const PlaceOrder = () => {
     } else if (getTotalCartAmount() === 0) {
       navigate('/cart')
     }
-  }, [token])
+  }, [token, getTotalCartAmount, navigate]);
 
   return (
     <form onSubmit={placeOrder} className='place-order'>
       <div className="place-order-left">
         <p className="title">Delivery Information</p>
         
-        {/* --- 📍 YE RAHA AAPKA LOCATION TRACE BUTTON --- */}
+     
         <button 
           type="button"
           onClick={traceLocation}
@@ -134,7 +138,7 @@ const PlaceOrder = () => {
             gap: "5px"
           }}
         >
-          {loadingLocation ? "Detecting..." : "🎯 Use My Current Location"}
+          {loadingLocation ? "Detecting..." : "Use My Current Location"}
         </button>
 
         <div className="multi-fields">
@@ -161,17 +165,17 @@ const PlaceOrder = () => {
           <div>
             <div className="cart-total-detail">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>₹{getTotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cart-total-detail">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+              <p>₹{getTotalCartAmount() === 0 ? 0 : 2}</p>
             </div>
             <hr />
             <div className="cart-total-detail">
               <b>Total</b>
-              <b>${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}</b>
+              <b>₹{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}</b>
             </div>
           </div>
           <button type='submit'>PROCEED TO PAYMENT</button>
@@ -181,4 +185,4 @@ const PlaceOrder = () => {
   )
 }
 
-export default PlaceOrder
+export default PlaceOrder;
