@@ -9,8 +9,6 @@ const Menu = () => {
     const { restaurant_list, addToCart } = useContext(StoreContext); 
     const [loading, setLoading] = useState(true);
     const [restaurantMenu, setRestaurantMenu] = useState([]);
-
-    // Restaurant details find karna (Header ke liye)
     const restaurant = restaurant_list?.find(res => String(res._id) === String(id));
 
     useEffect(() => {
@@ -42,14 +40,13 @@ const Menu = () => {
         return (
             <div className="loader-container">
                 <div className="loader"></div>
-                <p>Loading menu... 🍽️</p>
+                <p>Loading menu.......</p>
             </div>
         );
     }
 
     return (
         <div className='menu-page'>
-            {/* 1. Header Section: Aligned Like Swiggy */}
             <div className="menu-header">
                 <img 
                     className='res-main-img' 
@@ -66,20 +63,17 @@ const Menu = () => {
 
             <hr className="menu-divider" />
 
-            {/* 2. Menu List Section */}
             <div className="food-display-list">
                 {restaurantMenu && restaurantMenu.length > 0 ? (
                     restaurantMenu.map((item) => (
                         <div key={item._id} className='menu-item'>
                             
-                            {/* Left Side: Text Info */}
                             <div className="menu-item-info">
                                 <b>{item.name}</b>
                                 <span className="price">₹{item.price}</span>
                                 <p className="description">{item.description}</p>
                             </div>
 
-                            {/* Right Side: Image + Add Button */}
                             <div className="menu-item-image-container">
                                 <img 
                                     src={item.image} 

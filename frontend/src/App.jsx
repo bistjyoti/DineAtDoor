@@ -9,27 +9,39 @@ import LoginPopup from './components/LoginPopup/LoginPopup'
 import Verify from './pages/Verify/Verify'
 import MyOrders from './pages/MyOrders/MyOrders'
 import Menu from './components/Menu/Menu'
+import OrderTracking from './pages/OrderTracking/OrderTracking'
+import Admin from './pages/AdminPanel/AdminPanel'
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   return (
     <>
       {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
+      
       <div className='app'>
-        <Navbar setShowLogin={setShowLogin} />
+        <Navbar 
+          setShowLogin={setShowLogin} 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+        />
+        
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home searchQuery={searchQuery} />} />
           <Route path='/menu/:id' element={<Menu />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/order' element={<PlaceOrder />} />
+          <Route path='/cart' element={<Cart setShowLogin={setShowLogin} />} />
+          <Route path='/order' element={<PlaceOrder setShowLogin={setShowLogin} />} />
           <Route path='/verify' element={<Verify />} />
           <Route path='/myorders' element={<MyOrders />} />
+          <Route path='/track-order' element={<OrderTracking />} />
+          <Route path='/admin' element={<Admin />} />
         </Routes>
       </div>
+      
       <Footer />
     </>
   )
 }
 
-export default App
+export default App;

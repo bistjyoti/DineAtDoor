@@ -5,12 +5,12 @@ const restaurantSchema = new mongoose.Schema({
     description: { type: String, required: true },
     image: { type: String, required: true },
     rating: { type: Number, default: 0 },
-    location: { type: String, required: true }, // Jaise "Civil Lines, Roorkee"
-    cuisine: { type: Array, required: true }, // Jaise ["North Indian", "Chinese"]
+    location: { type: String, required: true },
+    cuisine: { type: Array, required: true }, 
     isClosed: { type: Boolean, default: false },
-    swiggyId: { type: String, required: true }, // Swiggy's restaurant ID for menu fetching
-    lat: { type: Number }, // Latitude for menu fetching
-    lng: { type: Number } // Longitude for menu fetching
+    swiggyId: { type: String, required: true }, 
+    lat: { type: Number }, 
+    lng: { type: Number } 
 });
 
 const restaurantModel = mongoose.models.restaurant || mongoose.model("restaurant", restaurantSchema);

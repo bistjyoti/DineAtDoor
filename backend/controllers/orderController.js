@@ -3,10 +3,9 @@ import userModel from './../models/userModel.js';
 import Stripe from "stripe"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
 const placeOrder = async (req, res) => {
-   
     const frontend_url = 'http://localhost:5173';
-    
     try {
         const newOrder = new orderModel({
             userId: req.body.userId,
@@ -23,7 +22,6 @@ const placeOrder = async (req, res) => {
                 product_data: {
                     name: item.name
                 },
-                
                 unit_amount: item.price * 100 
             },
             quantity: item.quantity
@@ -89,6 +87,7 @@ const listOrders = async (req, res) => {
         res.json({ success: false, message: "Error listing admin system orders" })
     }
 }
+
 const updateStatus = async (req, res) => {
     try {
         await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status })
@@ -99,4 +98,27 @@ const updateStatus = async (req, res) => {
     }
 }
 
-export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus }
+const verifyDeliveryProof = async (req, res) => {
+    const { orderId, verificationMethod } = req.body;
+    try {
+        if (!orderId) {
+            return res.json({ success: false, message: "Order ID Required" });
+        }
+
+        await orderModel.findByIdAndUpdate(orderId, { 
+            status: "Delivered",
+            payment: true 
+        });
+
+        res.json({ 
+            success: true, 
+            message: `Order marked Delivered safely via ${verificationMethod}!` 
+        });
+
+    } catch (error) {
+        console.log("Delivery Proof Error:", error);
+        res.json({ success: false, message: "Failed to process delivery security proof" });
+    }
+}
+
+export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus, verifyDeliveryProof }

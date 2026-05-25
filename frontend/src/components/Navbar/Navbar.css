@@ -3,17 +3,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* --- FIXED POSITIONING --- */
     position: sticky; 
     top: 0;
-    z-index: 1000; /* Isse Navbar sabse upar rahega */
-    background-color: white; 
+    z-index: 1000;
+    background-color: white;
+    border-bottom: 1px solid #e2e2e2;
 }
 
-.navbar .logo {
-    width: 150px;
-    cursor: pointer;
-}
+.navbar .logo { width: 150px; cursor: pointer; }
 
 .navbar-menu {
     display: flex;
@@ -23,116 +20,67 @@
     font-size: 18px;
 }
 
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    /* --- CLICK SECURITY --- */
-    position: relative;
-    z-index: 1001; 
-}
+.navbar-right { display: flex; align-items: center; gap: 25px; }
+.navbar-right img { cursor: pointer; width: 22px; }
 
-.navbar button {
+.navbar-right button {
     background: transparent;
-    font-size: 16px;
+    font-size: 15px;
     color: #49557e;
     border: 1px solid tomato;
-    padding: 10px 30px;
+    padding: 8px 25px;
     border-radius: 50px;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
 }
 
-.navbar button:hover {
-    background-color: #fff4f2;
+.navbar-right button:hover { background-color: #fff4f2; }
+
+.voice-btn { border: 1px solid #49557e !important; }
+.voice-btn-active { 
+    background: tomato !important; 
+    color: white !important; 
+    animation: pulse 1.5s infinite;
 }
 
-.navbar .active {
-    padding-bottom: 2px;
-    border-bottom: 2px solid #49557e;
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 99, 71, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 99, 71, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 99, 71, 0); }
 }
 
-.navbar li {
-    cursor: pointer;
-}
-
-/* --- BASKET ICON FIX --- */
-.navbar-search-icon {
-    position: relative;
-    cursor: pointer;
-    z-index: 1002; /* Basket icon ko sabse zyada priority */
-}
-
-.navbar-search-icon img {
-    width: 25px; /* Size adjust kiya */
-    display: block;
-}
-
+.navbar-search-icon { position: relative; cursor: pointer; }
 .navbar-search-icon .dot {
-    position: absolute;
-    min-width: 10px;
-    min-height: 10px;
-    background-color: tomato;
-    border-radius: 50%;
-    top: -8px;
-    right: -8px;
+    position: absolute; min-width: 10px; min-height: 10px;
+    background-color: tomato; border-radius: 50%; top: -8px; right: -8px;
 }
 
-.navbar-profile {
-    position: relative;
-    z-index: 1005;
-}
-
+.navbar-profile { position: relative; cursor: pointer; }
 .nav-profile-dropdown {
-    position: absolute;
-    display: none;
-    right: 0;
-    top: 30px; /* Dropdown ko icon ke niche lane ke liye */
-    z-index: 1010;
+    position: absolute; display: none; right: 0; top: 35px;
+    background-color: #fff2ef; padding: 15px 25px;
+    border-radius: 8px; border: 1px solid tomato;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1); z-index: 1010;
 }
+.navbar-profile:hover .nav-profile-dropdown { display: flex; flex-direction: column; gap: 12px; }
+.nav-profile-dropdown p { margin: 0; font-size: 15px; color: #49557e; cursor: pointer; }
+.nav-profile-dropdown p:hover { color: tomato; }
 
-.navbar-profile:hover .nav-profile-dropdown {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: #fff2ef;
-    padding: 12px 25px;
-    border-radius: 4px;
-    border: 1px solid tomato;
-    list-style: none;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+.voice-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.8); display: flex;
+    justify-content: center; align-items: center; z-index: 9999;
 }
+.voice-modal-content {
+    background: white; width: 90%; max-width: 400px;
+    border-radius: 20px; padding: 30px; text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.voice-camera-feed {
+    width: 120px; height: 120px; border-radius: 50%;
+    object-fit: cover; border: 4px solid tomato; margin-bottom: 20px;
+}
+.voice-transcript { font-size: 20px; font-weight: 500; color: #333; margin: 20px 0; }
 
-.nav-profile-dropdown img {
-    width: 20px;
-}
-
-.nav-profile-dropdown li:hover {
-    color: tomato;
-}
-
-.nav-profile-dropdown li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width:1050px) {
-    .navbar .logo { width: 140px; }
-    .navbar-menu { gap: 20px; font-size: 17px; }
-    .navbar-right { gap: 30px; }
-    .navbar-right img { width: 22px; }
-}
-
-@media (max-width:900px) {
-    .navbar .logo { width: 120px; }
-    .navbar-menu { gap: 15px; font-size: 16px; }
-    .navbar-right { gap: 20px; }
-    .navbar-right button { padding: 7px 20px; font-size: 15px; }
-}
-
-@media (max-width:750px) {
-    .navbar-menu { display: none; }
-}
+@media (max-width:1050px) { .navbar .logo { width: 140px; } }
+@media (max-width:750px) { .navbar-menu { display: none; } }

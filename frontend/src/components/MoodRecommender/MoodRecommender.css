@@ -74,10 +74,9 @@
 .mood-item.active .mood-name {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #60b246; /* DineAtDoor Signature Theme */
+    color: #60b246; 
 }
 
-/* 📊 RECOMMENDATION GRID VIEW FIX */
 .recommendation-results {
     width: 100%;
     display: flex;
@@ -96,16 +95,13 @@
     margin: 0;
 }
 
-/* ✅ Dynamic Symmetrical Grid Configuration */
 .mood-food-list {
     display: grid;
-    /* Automatically handles column count based on available spacing natively */
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px 24px; /* Row and Column distribution padding */
+    gap: 30px 24px; 
     width: 100%;
 }
 
-/* Ensure individual cards take up their full grid fractional blocks naturally */
 .mood-food-list > * {
     width: 100% !important;
     max-width: 100% !important;

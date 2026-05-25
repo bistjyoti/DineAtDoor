@@ -1,0 +1,38 @@
+.flash-sale-container {
+    background: linear-gradient(135deg, #2c3e50, #000000); /* Dark elegant look */
+    color: #f1c40f;
+    padding: 30px;
+    margin: 30px 0;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #f1c40f;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    display: block !important;
+}
+
+.flash-sale-container h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.flash-sale-container p {
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.flash-sale-container button {
+    background-color: #f1c40f;
+    color: rgb(13, 12, 12);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.flash-sale-container button:hover {
+    background-color: #d4ac0d;
+    transform: scale(1.05);
+}

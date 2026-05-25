@@ -11,7 +11,7 @@ export const connectDB = async () => {
             throw new Error("MONGO_URI not found in environment variables");
         }
 
-        console.log("🔍 Trying to connect to DB...");
+        console.log("Trying to connect to DB...");
         console.log("URI:", uri.replace(/:[^:]*@/, ":****@")); 
 
         await mongoose.connect(uri, {
@@ -22,7 +22,7 @@ export const connectDB = async () => {
             w: "majority"
         });
 
-        console.log("DB Connected Successfully ✅");
+        console.log("DB Connected Successfully");
 
     } catch (err) {
         console.log("DB Connection Error");

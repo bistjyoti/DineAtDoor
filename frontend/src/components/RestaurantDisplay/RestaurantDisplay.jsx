@@ -8,39 +8,35 @@ const RestaurantDisplay = ({ setSelectedRestaurant }) => {
     const { restaurant_list } = useContext(StoreContext);
     const navigate = useNavigate();
 
-    // 🍕 Agar data load ho raha ho
     if (!restaurant_list || restaurant_list.length === 0) {
         return (
             <div className="loader-container">
                 <div className="loader"></div>
-                <p>Finding the best restaurants for you... 🍽️</p>
+                <p>Finding the best restaurants for you... </p>
             </div>
         );
     }
 
-    // 🚀 Navigation Logic
     const handleRestaurantClick = (id) => {
-        if (!id) return; // Safety check agar ID na mile
+        if (!id) return; 
         
         if (setSelectedRestaurant) {
             setSelectedRestaurant(id);
         }
-        // Restaurant ki ID ke saath Menu page par bheje ga
+        
         navigate(`/menu/${id}`);
     }
 
-    // 🔍 Search & Distance Logic
+    
     const MAX_DISTANCE = 15; 
     const searchLower = searchTerm.trim().toLowerCase();
 
     const filteredRestaurants = restaurant_list.filter((item) => {
-        // Distance check: Agar distance mention hai toh filter karo, varna dikhao
         const isNearby = item.distance ? item.distance <= MAX_DISTANCE : true;
         
         if (!isNearby) return false;
         if (!searchLower) return true;
 
-        // Search in Name, Location and Cuisines
         const cuisineStr = Array.isArray(item.cuisine) ? item.cuisine.join(' ') : (item.cuisine || '');
         
         return (
@@ -55,7 +51,7 @@ const RestaurantDisplay = ({ setSelectedRestaurant }) => {
             <div className="display-header">
                 <div className="header-text">
                     <h2>Top Restaurants in Roorkee</h2>
-                    <p>Order from your favorite local spots! ✨</p>
+                    <p>Order from your favorite local spots!</p>
                 </div>
                 <div className="restaurant-search">
                     <input
@@ -79,7 +75,6 @@ const RestaurantDisplay = ({ setSelectedRestaurant }) => {
                                 <img 
                                     src={item.image || "https://via.placeholder.com/300x200?text=Delicious+Food"} 
                                     alt={item.name} 
-                                    // Agar image link dead hai toh fallback swiggy image dikhao
                                     onError={(e) => { 
                                         e.target.onerror = null; 
                                         e.target.src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/e0vvp5vebill0idwt874"; 
@@ -108,7 +103,7 @@ const RestaurantDisplay = ({ setSelectedRestaurant }) => {
                     ))
                 ) : (
                     <div className="no-results">
-                        <p>Oops! Is naam ka koi restaurant nahi mila. Kuch aur search karo? 🔍</p>
+                        <p>Oops!No restaurants available with this name. Search for another one..</p>
                     </div>
                 )}
             </div>

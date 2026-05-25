@@ -53,3 +53,11 @@
         font-size: 10px;
     }
 }
+
+.disabled-btn {
+    background-color: #ccc;
+    cursor: not-allowed;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+}

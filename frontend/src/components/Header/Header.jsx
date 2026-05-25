@@ -1,6 +1,6 @@
 import React from 'react'
 import './Header.css'
-import { assets } from '../../assets/assets' // Path check kar lena sahi hai na?
+import { assets } from '../../assets/assets' 
 
 const Header = () => {
   return (

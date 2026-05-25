@@ -79,7 +79,7 @@ const fetchLiveRestaurants = async (req, res) => {
         const userLng = parseFloat(req.query.lng) || DEFAULT_LNG;
         const locations = [
             { name: 'Roorkee Center', lat: 29.8543, lng: 77.8880 },
-            { name: 'Roorkee IIT', lat: 29.8646, lng: 77.8964 }
+            { name: 'Roorkee Institute of technology', lat: 29.8646, lng: 77.8964 }
         ];
 
         const allRestaurants = [];

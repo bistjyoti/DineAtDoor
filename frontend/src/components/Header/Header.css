@@ -3,10 +3,10 @@
     margin: 30px auto;
     /* Yahan path assets ke hisaab se check kar lena */
     background: url('/new_header.png') no-repeat;
-    background-size: cover; /* 'contain' se image kat rahi thi ya side khali thi, 'cover' se pura fill ho jayega */
+    background-size: cover; 
     background-position: center;
     position: relative;
-    border-radius: 15px; /* Corners ko thoda smooth karne ke liye */
+    border-radius: 15px; 
 }
 
 .header-contents {
@@ -25,7 +25,7 @@
     font-weight: 500;
     color: white;
     font-size: max(4.5vw, 22px);
-    line-height: 1.1; /* Text ko thoda compact karne ke liye */
+    line-height: 1.1; 
 }
 
 .header-contents p {
@@ -47,7 +47,7 @@
 }
 
 .header-contents button:hover {
-    background-color: #f0f0f0; /* Hover effect ke liye */
+    background-color: #f0f0f0; 
 }
 
 /* Animations */
@@ -56,7 +56,7 @@
     100% { opacity: 1; }
 }
 
-/* Responsive Designs */
+
 @media (max-width: 1050px) {
     .header-contents {
         max-width: 45%;
@@ -65,10 +65,10 @@
 
 @media (max-width: 750px) {
     .header {
-        height: 50vw; /* Mobile par header thoda bada dikhega toh better lagega */
+        height: 50vw;
     }
     .header-contents {
-        max-width: 80%; /* Mobile par text ko zyada jagah chahiye */
+        max-width: 80%; 
         bottom: 15%;
     }
     .header-contents p {

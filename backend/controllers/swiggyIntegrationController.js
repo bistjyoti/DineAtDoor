@@ -1,15 +1,14 @@
 import axios from 'axios';
 import foodModel from './../models/foodModel.js';
 
-// Swiggy API endpoints
 const SWIGGY_BASE_URL = 'https://www.swiggy.com/api/v2';
 const SWIGGY_API_KEY = process.env.SWIGGY_API_KEY || '';
 
-// Cache to store restaurant data
-const restaurantCache = new Map();
-const CACHE_DURATION = 3600000; // 1 hour in milliseconds
 
-// Fetch restaurants by location using Swiggy API
+const restaurantCache = new Map();
+const CACHE_DURATION = 3600000; 
+
+
 const getRestaurantsByLocation = async (req, res) => {
     try {
         const { latitude, longitude, offset = 0 } = req.query;
@@ -19,8 +18,6 @@ const getRestaurantsByLocation = async (req, res) => {
         }
 
         const cacheKey = `restaurants_${latitude}_${longitude}`;
-        
-        // Check cache first
         if (restaurantCache.has(cacheKey)) {
             const cached = restaurantCache.get(cacheKey);
             if (Date.now() - cached.timestamp < CACHE_DURATION) {
@@ -28,7 +25,7 @@ const getRestaurantsByLocation = async (req, res) => {
             }
         }
 
-        // Fetch from Swiggy API
+
         const response = await axios.get(`${SWIGGY_BASE_URL}/restaurants`, {
             params: {
                 lat: latitude,
@@ -44,7 +41,7 @@ const getRestaurantsByLocation = async (req, res) => {
 
         let restaurants = [];
 
-        // Parse Swiggy API response - handle different response structures
+       
         if (response.data) {
             if (Array.isArray(response.data)) {
                 restaurants = parseRestaurantsFromArray(response.data);
@@ -55,7 +52,7 @@ const getRestaurantsByLocation = async (req, res) => {
             }
         }
 
-        // Filter and format restaurants
+
         const formattedRestaurants = restaurants.map(r => ({
             id: r.id,
             name: r.name,
@@ -72,7 +69,6 @@ const getRestaurantsByLocation = async (req, res) => {
             cloudinaryImageId: r.cloudinaryImageId || ''
         })).filter(r => r.isOpen);
 
-        // Cache the results
         restaurantCache.set(cacheKey, {
             data: formattedRestaurants,
             timestamp: Date.now()
@@ -85,7 +81,7 @@ const getRestaurantsByLocation = async (req, res) => {
     }
 };
 
-// Fetch specific restaurant details and menu
+
 const getRestaurantMenu = async (req, res) => {
     try {
         const { restaurantId } = req.params;
@@ -94,7 +90,7 @@ const getRestaurantMenu = async (req, res) => {
             return res.json({ success: false, message: 'Restaurant ID required' });
         }
 
-        // Fetch restaurant menu from Swiggy
+       
         const response = await axios.get(`${SWIGGY_BASE_URL}/restaurants/${restaurantId}`, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -112,7 +108,7 @@ const getRestaurantMenu = async (req, res) => {
     }
 };
 
-// Fetch all available dishes for multiple restaurants
+
 const getAllRestaurantDishes = async (req, res) => {
     try {
         const { latitude, longitude } = req.query;
@@ -121,7 +117,7 @@ const getAllRestaurantDishes = async (req, res) => {
             return res.json({ success: false, message: 'Location coordinates required' });
         }
 
-        // First get all restaurants
+     
         const restaurantsResponse = await axios.get(`${SWIGGY_BASE_URL}/restaurants`, {
             params: {
                 lat: latitude,
@@ -140,7 +136,7 @@ const getAllRestaurantDishes = async (req, res) => {
             restaurants = parseRestaurantsFromArray(restaurantsResponse.data);
         }
 
-        // Fetch menu for each restaurant
+
         const restaurantDishes = [];
         
         for (const restaurant of restaurants.slice(0, 10)) { // Limit to first 10 restaurants to avoid rate limits
@@ -176,7 +172,7 @@ const getAllRestaurantDishes = async (req, res) => {
     }
 };
 
-// Sync selected restaurants and dishes to local database
+
 const syncRestaurantsToDB = async (req, res) => {
     try {
         const { restaurants } = req.body;
@@ -224,7 +220,7 @@ const syncRestaurantsToDB = async (req, res) => {
     }
 };
 
-// Get popular dishes across all restaurants
+
 const getPopularDishes = async (req, res) => {
     try {
         const { latitude, longitude, limit = 20 } = req.query;
@@ -233,7 +229,7 @@ const getPopularDishes = async (req, res) => {
             return res.json({ success: false, message: 'Location coordinates required' });
         }
 
-        // Fetch restaurants
+        
         const restaurantsResponse = await axios.get(`${SWIGGY_BASE_URL}/restaurants`, {
             params: {
                 lat: latitude,
@@ -252,7 +248,7 @@ const getPopularDishes = async (req, res) => {
 
         const allDishes = [];
 
-        // Collect dishes from top restaurants
+
         for (const restaurant of restaurants.slice(0, 5)) {
             try {
                 const menuResponse = await axios.get(`${SWIGGY_BASE_URL}/restaurants/${restaurant.id}`, {
@@ -274,7 +270,7 @@ const getPopularDishes = async (req, res) => {
             }
         }
 
-        // Sort by rating and return top dishes
+       
         const popularDishes = allDishes
             .sort((a, b) => (b.rating || 0) - (a.rating || 0))
             .slice(0, parseInt(limit));
@@ -286,7 +282,7 @@ const getPopularDishes = async (req, res) => {
     }
 };
 
-// Search dishes by name across all restaurants
+
 const searchDishes = async (req, res) => {
     try {
         const { query, latitude, longitude } = req.query;
@@ -352,7 +348,7 @@ const searchDishes = async (req, res) => {
     }
 };
 
-// Helper functions to parse Swiggy API responses
+
 const parseRestaurants = (restaurantsArray) => {
     return restaurantsArray.map(r => {
         const restaurantData = r.restaurant || r;
@@ -397,7 +393,7 @@ const parseDishesFromResponse = (apiResponse) => {
     try {
         if (!apiResponse) return dishes;
 
-        // Check different possible response structures
+        
         const menuItems = apiResponse.items || apiResponse.dishes || apiResponse.menu || [];
 
         return menuItems.map(item => {

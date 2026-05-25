@@ -1,13 +1,12 @@
 .login-popup {
-    /* Fixed position se ye screen ke sath move nahi karega aur pure page ko cover karega */
     position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: #000000b0; /* Thoda aur dark parda taaki piche ka text na dikhe */
+    background-color: #000000b0; 
     display: grid;
-    z-index: 99999; /* Isse Navbar aur Cart dono iske niche rahenge */
+    z-index: 99999; 
 }
 
 .login-popup-container {
@@ -15,7 +14,7 @@
     width: min(90vw, 420px);
     max-height: calc(100vh - 40px);
     color: #808080;
-    background-color: white; /* Solid white background */
+    background-color: white; 
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -23,7 +22,7 @@
     border-radius: 8px;
     font-size: 14px;
     animation: fadeIn 0.4s;
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.5); /* Popup ko ubhara hua dikhane ke liye */
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.5); 
     overflow-y: auto;
 }
 

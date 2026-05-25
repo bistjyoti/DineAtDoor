@@ -83,14 +83,14 @@ const extractAllItemCards = (obj) => {
 const syncAllMenus = async () => {
     try {
         await mongoose.connect(MONGO_URI);
-        console.log("Connected to DB... 🚀");
+        console.log("Connected to DB...");
 
         for (const restro of restaurantsConfig) {
             console.log(`\n---------------------------------------`);
             console.log(`Processing file: ${restro.file}...`);
 
             if (!fs.existsSync(restro.file)) {
-                console.log(`⚠️ Skip: File '${restro.file}' nahi mili.`);
+                console.log(`Skip: File '${restro.file}' nahi mili.`);
                 continue;
             }
 
