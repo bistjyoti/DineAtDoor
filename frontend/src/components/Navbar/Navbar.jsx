@@ -3,8 +3,6 @@ import './Navbar.css'
 import { assets } from '../../assets/assets';
 import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../context/StoreContext';
-
-import 'regenerator-runtime/runtime';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
