@@ -35,25 +35,20 @@ const loginUser = async (req, res) => {
     let currentFaceDescriptor = req.body.currentFaceDescriptor || req.body.faceDescriptor;
 
     try {
-        if (!email || !password) {
-            return res.json({ success: false, message: "Email and password are required" });
+        // Validation 1: Email toh hamesha zaroori hai taaki pata chale account kiska hai
+        if (!email) {
+            return res.json({ success: false, message: "Email is required" });
         }
 
+        // Check karo user database mein hai ya nahi
         const user = await userModel.findOne({ email });
         if (!user) {
             return res.json({ success: false, message: "User does not exist" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.json({ success: false, message: "Invalid credentials" });
-        }
-
-        if (user.faceDescriptor && user.faceDescriptor.length > 0) {
-            if (!currentFaceDescriptor) {
-                return res.json({ success: false, message: "Face scan required" });
-            }
-
+        // 🌟 AGAR FACE SCANNED DATA AAYA HAI ➔ PASSWORD BYPASS KARO
+        if (currentFaceDescriptor && user.faceDescriptor && user.faceDescriptor.length > 0) {
+            
             if (typeof currentFaceDescriptor === 'string') {
                 try {
                     currentFaceDescriptor = JSON.parse(currentFaceDescriptor);
@@ -66,24 +61,48 @@ const loginUser = async (req, res) => {
             const currentDescriptor = normalizeDescriptor(currentFaceDescriptor);
             
             const distance = calculateEuclideanDistance(storedDescriptor, currentDescriptor);
-            console.log("LOGIN FACE DISTANCE:", distance);
+            console.log("LOGIN FACE DISTANCE (PASSWORD BYPASS MODE):", distance);
 
             const strictThreshold = 0.45; 
             if (distance > strictThreshold) {
                 return res.json({ success: false, message: "Face verification failed" });
             }
-        }
-
-        const token = createToken(user._id);
-        res.json({
-            success: true,
-            token,
-            user: {
-                name: user.name,
-                email: user.email,
-                faceRegistered: true
+            
+            // Face match ho gaya! Ab bina password check kiye yahan se seedha login token bhej do
+            const token = createToken(user._id);
+            return res.json({
+                success: true,
+                token,
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    faceRegistered: true
+                }
+            });
+        } 
+        
+        // 🌟 AGAR FACE DATA NAHI AAYA HAI ➔ TABHI PASSWORD SE LOGIN HOGA
+        else {
+            if (!password) {
+                return res.json({ success: false, message: "Password is required when face is not scanned" });
             }
-        });
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.json({ success: false, message: "Invalid credentials" });
+            }
+
+            const token = createToken(user._id);
+            return res.json({
+                success: true,
+                token,
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    faceRegistered: !!(user.faceDescriptor && user.faceDescriptor.length > 0)
+                }
+            });
+        }
 
     } catch (error) {
         console.log("LOGIN ERROR:", error);
@@ -117,7 +136,7 @@ const registerUser = async (req, res) => {
             return res.json({ success: false, message: "Face data required" });
         }
 
-        // MULTIPART PARSING FIX: Agar descriptor string stringify hokar aaya hai toh array banayega
+
         if (typeof faceDescriptor === 'string') {
             try {
                 faceDescriptor = JSON.parse(faceDescriptor);

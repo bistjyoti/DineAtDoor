@@ -12,7 +12,6 @@ const LoginPopup = ({ setShowLogin }) => {
     const navigate = useNavigate();
     const [data, setData] = useState({ name: "", email: "", password: "" })
     
-    // Face States
     const [isProcessing, setIsProcessing] = useState(false)
     const [faceCaptured, setFaceCaptured] = useState(false)
     const [modelsLoaded, setModelsLoaded] = useState(false)
@@ -187,7 +186,7 @@ const LoginPopup = ({ setShowLogin }) => {
                         onChange={onChangeHandler} 
                         type="password" 
                         placeholder='Password' 
-                        required 
+                        required={currState === "Sign Up"} 
                     />
                 </div>
 
