@@ -134,7 +134,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
                 type="text" 
                 value={searchQuery} 
                 onChange={(e) => handleSearchTyping(e.target.value)} 
-                placeholder={listening ? "Bolna shuru karein, type ho raha hai..." : "Bol kar ya type karke search karein..."} 
+                placeholder={listening ? "Bolna shuru karein, type ho raha hai..." : "Speak or type the dishes you like...."} 
                 style={{ width: '100%', padding: '16px', borderRadius: '30px', border: listening ? '2px solid #ff4d4d' : '2px solid tomato', fontSize: '18px', outline: 'none' }} 
               />
               
