@@ -75,7 +75,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
 
   return (
     <div className='navbar'>
-        <Link to='/' onClick={() => setMenu('home')}><img src={assets.logo} alt="Logo" className='logo' /></Link>
+        <Link to='/' onClick={() => setMenu('home')}><img src={assets.logo} alt="Logo" className='logo' loading="eager" /></Link>
         
         <ul className="navbar-menu">
           <Link to='/' onClick={() => setMenu('home')} className={menu === 'home' ? 'active' : ''}>home</Link>
@@ -92,10 +92,10 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
             {listening ? "🎙️ Listening..." : "🎤 Speak"}
           </button>
           
-          <img src={assets.search_icon} alt="Search" onClick={() => { setShowSearchModal(true); setSearchQuery(""); }} style={{ cursor: 'pointer', width: '22px' }} />
+          <img src={assets.search_icon} alt="Search" onClick={() => { setShowSearchModal(true); setSearchQuery(""); }} style={{ cursor: 'pointer', width: '22px' }} loading="lazy" />
           
           <div className="navbar-search-icon" onClick={() => navigate('/cart')} style={{ cursor: "pointer" }}>
-            <img src={assets.basket_icon} alt="Cart" />
+            <img src={assets.basket_icon} alt="Cart" loading="lazy" />
             <div className={getTotalCartAmount() === 0 ? '' : 'dot'}></div>
           </div>
           
@@ -103,14 +103,14 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
             <button onClick={() => setShowLogin(true)}>sign in</button>
           ) : (
             <div className='navbar-profile'>
-              <img src={assets.profile_icon} alt="Profile" />
+              <img src={assets.profile_icon} alt="Profile" loading="lazy" />
               <ul className="nav-profile-dropdown">
                 <li onClick={() => navigate('/myorders')}>
-                  <img src={assets.bag_icon} alt="Orders" /><p>Orders</p>
+                  <img src={assets.bag_icon} alt="Orders" loading="lazy" /><p>Orders</p>
                 </li>
                 <hr />
                 <li onClick={logout}>
-                  <img src={assets.logout_icon} alt="Logout" /><p>Logout</p>
+                  <img src={assets.logout_icon} alt="Logout" loading="lazy" /><p>Logout</p>
                 </li>
               </ul>
             </div>

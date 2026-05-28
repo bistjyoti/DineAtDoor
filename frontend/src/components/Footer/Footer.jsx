@@ -7,12 +7,12 @@ const Footer = () => {
     <div className='footer' id='footer'>
         <div className="footer-content">
             <div className="footer-content-left">
-                <img src={assets.logo} alt="" />
+                <img src={assets.logo} alt="" loading="lazy" />
                 <p>DineAtDoor is your favorite food delivery partner, bringing fresh and delicious meals right to your doorstep with speed and care.</p>
                 <div className="footer-social-icons">
-                    <img src={assets.facebook_icon} alt="" />
-                    <img src={assets.twitter_icon} alt="" />
-                    <img src={assets.linkedin_icon} alt="" />
+                    <img src={assets.facebook_icon} alt="" loading="lazy" />
+                    <img src={assets.twitter_icon} alt="" loading="lazy" />
+                    <img src={assets.linkedin_icon} alt="" loading="lazy" />
                 </div>
             </div>
             <div className="footer-content-center">

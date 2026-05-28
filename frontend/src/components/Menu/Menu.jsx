@@ -51,7 +51,8 @@ const Menu = () => {
                 <img 
                     className='res-main-img' 
                     src={restaurant?.image || "https://via.placeholder.com/250"} 
-                    alt={restaurant?.name} 
+                    alt={restaurant?.name}
+                    loading="eager"
                 />
                 <div className="menu-header-right">
                     <h1>{restaurant ? restaurant.name : "Restaurant Menu"}</h1>
@@ -78,6 +79,7 @@ const Menu = () => {
                                 <img 
                                     src={item.image} 
                                     alt={item.name}
+                                    loading="lazy"
                                     onError={(e) => e.target.src="https://via.placeholder.com/150?text=Dish"}
                                 />
                                 <button 
@@ -98,6 +100,3 @@ const Menu = () => {
             </div>
         </div>
     )
-}
-
-export default Menu;

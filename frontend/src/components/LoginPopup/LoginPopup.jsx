@@ -158,7 +158,7 @@ const LoginPopup = ({ setShowLogin }) => {
             <form onSubmit={onLogin} className="login-popup-container">
                 <div className="login-popup-title">
                     <h2>{currState}</h2>
-                    <img onClick={() => setShowLogin(false)} src={assets.cross_icon} alt="Close" />
+                    <img onClick={() => setShowLogin(false)} src={assets.cross_icon} alt="Close" loading="lazy" />
                 </div>
                 
                 <div className="login-popup-inputs">
@@ -195,7 +195,7 @@ const LoginPopup = ({ setShowLogin }) => {
                     
                     <div style={{ position: 'relative', width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
                         {faceCaptured && capturedImageBase64 ? (
-                            <img src={capturedImageBase64} alt="Captured Face" style={{ width: '100%', borderRadius: '8px', border: "3px solid #28a745" }} />
+                            <img src={capturedImageBase64} alt="Captured Face" loading="lazy" style={{ width: '100%', borderRadius: '8px', border: "3px solid #28a745" }} />
                         ) : (
                             <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', borderRadius: '8px', border: "3px solid #ccc" }} />
                         )}

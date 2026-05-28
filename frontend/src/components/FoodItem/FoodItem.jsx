@@ -20,7 +20,7 @@ const FoodItem = ({ id, name, price, description, image, isRestaurant }) => {
         <div className="food-item-name-rating">
           <p className="food-item-name">{name}</p>
           <div className="star">
-            <img src={assets.rating_starts} alt="" />
+            <img src={assets.rating_starts} alt="" loading="lazy" />
           </div>
         </div>
         
@@ -35,7 +35,8 @@ const FoodItem = ({ id, name, price, description, image, isRestaurant }) => {
         <img 
           src={image} 
           className="food-main-img" 
-          alt={name} 
+          alt={name}
+          loading="lazy"
           onError={(e) => {
             const lowerName = name.toLowerCase();
             if (lowerName.includes("cake") || lowerName.includes("velvet") || lowerName.includes("waffle") || lowerName.includes("dry cake")) {

@@ -64,7 +64,7 @@ const Cart = ({ setShowLogin }) => {
                 return (
                   <div key={item._id}>
                     <div className="cart-items-title cart-items-item">
-                      <img src={item.image.startsWith('http') ? item.image : `${url}/images/${item.image}`} alt={item.name} />
+                      <img src={item.image.startsWith('http') ? item.image : `${url}/images/${item.image}`} alt={item.name} loading="lazy" />
                       <p>{item.name}</p>
                       <p>₹{item.price}</p>
                       <p>{cartItems[item._id]}</p>

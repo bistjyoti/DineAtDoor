@@ -28,7 +28,7 @@ const MyOrders = () => {
                 {data.map((order, index) => {
                     return (
                         <div key={order._id || index} className="my-orders-order">
-                            <img src={assets.parcel_icon} alt="" />
+                            <img src={assets.parcel_icon} alt="" loading="lazy" />
                             <p>
                                 {order.items.map((item, idx) => {
                                     return idx === order.items.length - 1 
