@@ -74,7 +74,8 @@ const RestaurantDisplay = ({ setSelectedRestaurant }) => {
                             <div className="img-container">
                                 <img 
                                     src={item.image || "https://via.placeholder.com/300x200?text=Delicious+Food"} 
-                                    alt={item.name} 
+                                    alt={item.name}
+                                    loading="lazy"
                                     onError={(e) => { 
                                         e.target.onerror = null; 
                                         e.target.src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/e0vvp5vebill0idwt874"; 
