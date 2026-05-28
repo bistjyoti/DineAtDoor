@@ -2,11 +2,17 @@ import orderModel from './../models/orderModel.js';
 import userModel from './../models/userModel.js';
 import Razorpay from 'razorpay';
 
-// Razorpay instance - Nayi keys automatically load ho jayengi
-const razorpayInstance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// Razorpay instance - lazily initialised so env vars are guaranteed to be
+// present at call time rather than at module load time.
+const getRazorpayInstance = () => {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+        throw new Error('RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables must be set');
+    }
+    return new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+};
 
 // 1. Place Order Controller
 const placeOrder = async (req, res) => {
@@ -29,7 +35,7 @@ const placeOrder = async (req, res) => {
             receipt: `receipt_order_${newOrder._id}`,
         };
 
-        const razorpayOrder = await razorpayInstance.orders.create(options);
+        const razorpayOrder = await getRazorpayInstance().orders.create(options);
 
         if (!razorpayOrder) {
             return res.json({ success: false, message: "Razorpay order creation failed" });
