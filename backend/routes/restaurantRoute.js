@@ -3,7 +3,7 @@ import {
     addRestaurant, 
     listRestaurants, 
     fetchLiveRestaurants, 
-    syncLiveRestaurants, // ✨ Naya controller import kiya
+    syncLiveRestaurants, 
     fetchRestaurantMenu,
     syncAllRestaurantMenus,
     syncMissingRestaurantMenus

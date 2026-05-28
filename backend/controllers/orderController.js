@@ -1,57 +1,54 @@
 import orderModel from './../models/orderModel.js';
 import userModel from './../models/userModel.js';
-import Stripe from "stripe"
+import Razorpay from 'razorpay';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+// Razorpay instance - Nayi keys automatically load ho jayengi
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
+// 1. Place Order Controller
 const placeOrder = async (req, res) => {
-    const frontend_url = 'http://localhost:5173';
     try {
         const newOrder = new orderModel({
             userId: req.body.userId,
             items: req.body.items,
             amount: req.body.amount,
-            address: req.body.address
+            address: req.body.address,
+            payment: false 
         })
         await newOrder.save();
+        
         await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
 
-        const line_items = req.body.items.map((item) => ({
-            price_data: {
-                currency: "inr", 
-                product_data: {
-                    name: item.name
-                },
-                unit_amount: item.price * 100 
-            },
-            quantity: item.quantity
-        }))
+        // Amount calculation for Razorpay (Paisa conversion)
+        const options = {
+            amount: Number(req.body.amount) * 100, 
+            currency: "INR",
+            receipt: `receipt_order_${newOrder._id}`,
+        };
 
-        line_items.push({
-            price_data: {
-                currency: "inr", 
-                product_data: {
-                    name: "Delivery Charges"
-                },
-                unit_amount: 2 * 100  
-            },
-            quantity: 1
-        })
-        const session = await stripe.checkout.sessions.create({
-            line_items: line_items,
-            mode: 'payment',
-            success_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
-            cancel_url: `${frontend_url}/verify?success=false&orderId=${newOrder._id}`
-        })
+        const razorpayOrder = await razorpayInstance.orders.create(options);
 
-        res.json({ success: true, session_url: session.url })
+        if (!razorpayOrder) {
+            return res.json({ success: false, message: "Razorpay order creation failed" });
+        }
+
+        // Response with BOTH IDs for frontend synchronization
+        res.json({ 
+            success: true, 
+            razorpayOrder: razorpayOrder, 
+            localOrderId: newOrder._id 
+        });
 
     } catch (error) {
-        console.log("Stripe order backend error:", error)
-        res.json({ success: false, message: "Error mapping payment session" })
+        console.log("Razorpay order backend error:", error)
+        res.json({ success: false, message: "Error setting up Razorpay session" })
     }
 }
 
+// 2. Verify Payment Controller
 const verifyOrder = async (req, res) => {
     const { orderId, success } = req.body;
     try {
@@ -59,6 +56,7 @@ const verifyOrder = async (req, res) => {
             await orderModel.findByIdAndUpdate(orderId, { payment: true });
             res.json({ success: true, message: "Paid Successfully" })
         } else {
+            // User cancelled or payment failed - cleanup
             await orderModel.findByIdAndDelete(orderId);
             res.json({ success: false, message: "Payment Declined" })
         }
@@ -68,6 +66,7 @@ const verifyOrder = async (req, res) => {
     }
 }
 
+// 3. User Ke Orders Fetch Karna
 const userOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({ userId: req.body.userId })
@@ -78,6 +77,7 @@ const userOrders = async (req, res) => {
     }
 }
 
+// 4. Admin Panel Ke Liye Saare Orders List Karna
 const listOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({});
@@ -88,6 +88,7 @@ const listOrders = async (req, res) => {
     }
 }
 
+// 5. Order Status Update Karna
 const updateStatus = async (req, res) => {
     try {
         await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status })
@@ -98,6 +99,7 @@ const updateStatus = async (req, res) => {
     }
 }
 
+// 6. Security Delivery Proof Controller
 const verifyDeliveryProof = async (req, res) => {
     const { orderId, verificationMethod } = req.body;
     try {

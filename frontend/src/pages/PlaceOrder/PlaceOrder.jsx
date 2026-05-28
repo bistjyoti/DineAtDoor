@@ -15,6 +15,17 @@ const PlaceOrder = () => {
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); 
 
+  // Razorpay Script ko runtime par load karne ke liye helper function
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
     setData(data => ({ ...data, [name]: value }))
@@ -74,15 +85,80 @@ const PlaceOrder = () => {
 
     try {
       setIsSubmitting(true);
+
+      // 1. Razorpay script ko load karo browser mein
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        alert("Failed to load Razorpay SDK. Check your internet connection.");
+        setIsSubmitting(false);
+        return;
+      }
+
       addOrderToAdmin({ items: orderItems, totalAmount: orderData.amount, address: data });
+      
+      // 2. Humare backend se Razorpay order create karwao
       const response = await axios.post(`${url}/api/order/place`, orderData, { 
         headers: { token: token } 
       });
       
       if (response.data.success) {
-        window.location.replace(response.data.session_url);
+        const { razorpayOrder, localOrderId } = response.data;
+
+        // 3. Razorpay Checkout Popup Configuration Options
+        const options = {
+          key: "rzp_test_SulDVCP4qQQeov", // Tumhari naye generated Test Key ID yahan set ho gayi hai
+          amount: razorpayOrder.amount,
+          currency: razorpayOrder.currency,
+          name: "DineAtDoor",
+          description: "Food Delivery Payment",
+          order_id: razorpayOrder.id,
+          handler: async function (paymentResponse) {
+            try {
+              // Payment success hone ke baad backend par verify karo
+              const verifyResponse = await axios.post(`${url}/api/order/verify`, {
+                orderId: localOrderId,
+                success: true,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id
+              }, { headers: { token: token } });
+
+              if (verifyResponse.data.success) {
+                alert("Payment Successful! Order Placed.");
+                navigate('/myorders'); 
+              } else {
+                alert("Payment verification failed.");
+                navigate('/');
+              }
+            } catch (err) {
+              console.error(err);
+              alert("Error during payment verification.");
+            }
+          },
+          prefill: {
+            name: `${data.firstName} ${data.lastName}`,
+            email: data.email,
+            contact: data.phone || "9999999999"
+          },
+          theme: {
+            color: "tomato" 
+          },
+          modal: {
+            ondismiss: async function() {
+              // Agar user bina payment kiye popup close kar deta hai
+              await axios.post(`${url}/api/order/verify`, {
+                orderId: localOrderId,
+                success: false
+              }, { headers: { token: token } });
+              alert("Payment Cancelled.");
+              setIsSubmitting(false);
+            }
+          }
+        };
+
+        const rzp1 = new window.Razorpay(options);
+        rzp1.open();
+
       } else {
-        alert("Stripe gateway error.");
+        alert("Razorpay backend setup error.");
         setIsSubmitting(false);
       }
     } catch (err) {
@@ -110,13 +186,14 @@ const PlaceOrder = () => {
       
          <input required name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Email address' />
          <input required name='street' onChange={onChangeHandler} value={data.street} type="text" placeholder='Street' />
+         <input name='phone' onChange={onChangeHandler} value={data.phone || ''} type="text" placeholder='Phone Number' />
       </div>
 
       <div className="place-order-right">
         <div className="cart-total">
           <h2>Cart Total</h2>
           <button type='submit' disabled={isSubmitting}>
-            {isSubmitting ? "REDIRECTING..." : "PROCEED TO PAYMENT"}
+            {isSubmitting ? "PROCESSING PAYMENT..." : "PROCEED TO PAYMENT"}
           </button>
         </div>
       </div>
