@@ -6,7 +6,10 @@ import './Menu.css'
 const Menu = () => {
     const { id } = useParams(); 
     const navigate = useNavigate();
-    const { restaurant_list, addToCart } = useContext(StoreContext); 
+    
+    // 🔥 Correction: 'url' ko context se nikala taaki Vercel wala link automatic chale
+    const { restaurant_list, addToCart, url } = useContext(StoreContext); 
+    
     const [loading, setLoading] = useState(true);
     const [restaurantMenu, setRestaurantMenu] = useState([]);
     const restaurant = restaurant_list?.find(res => String(res._id) === String(id));
@@ -15,7 +18,9 @@ const Menu = () => {
         const fetchMenu = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:4000/api/restaurant/menu/${id}`);
+                
+                // 🔥 Correction: 'http://localhost:4000' ki jagah context wala 'url' use kiya
+                const response = await fetch(`${url}/api/restaurant/menu/${id}`);
                 const data = await response.json();
                 
                 if (data.success && data.data) {
@@ -34,7 +39,7 @@ const Menu = () => {
         if (id) {
             fetchMenu();
         }
-    }, [id]);
+    }, [id, url]); // 'url' ko dependency mein daal diya
 
     if (loading) {
         return (

@@ -31,11 +31,14 @@ const StoreContextProvider = (props) => {
         return localStorage.getItem('isFlashSaleOn') === 'true';
     });
     
-    const url = "http://localhost:4000"; 
+    // 🔥 Correction: Intelligent URL logic jo Vercel aur Local dono ko handle karega
+    const url = window.location.hostname === "localhost" 
+        ? "http://localhost:4000" 
+        : "https://dine-at-door-backend.vercel.app"; // Yahan apna asli Backend Vercel link daalo
 
     useEffect(() => {
         localStorage.setItem("allOrders", JSON.stringify(orders));
-        localStorage.setItem("role", userRole); // Role ko save karna
+        localStorage.setItem("role", userRole);
     }, [orders, userRole]);
 
     const toggleFlashSale = () => {
@@ -72,7 +75,6 @@ const StoreContextProvider = (props) => {
         } catch (error) { setRestaurantList([]); }
     }, [url]);
 
-    // --- CART LOGIC ---
     const addToCart = async (itemId) => {
         setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
         const activeToken = token || localStorage.getItem("token");

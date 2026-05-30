@@ -17,6 +17,7 @@ export default defineConfig({
       usePolling: false
     },
 
+    // Ye proxy sirf local development ke liye hai
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
@@ -24,6 +25,15 @@ export default defineConfig({
         secure: false
       }
     }
+  },
+
+  // Deployment ke liye backend URL define kar rahe hain
+  define: {
+    'process.env.VITE_API_URL': JSON.stringify(
+      process.env.NODE_ENV === 'production' 
+      ? 'https://tera-vercel-backend-link.vercel.app' 
+      : 'http://localhost:4000'
+    )
   },
 
   optimizeDeps: {

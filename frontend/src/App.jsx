@@ -11,6 +11,8 @@ import MyOrders from './pages/MyOrders/MyOrders'
 import Menu from './components/Menu/Menu'
 import OrderTracking from './pages/OrderTracking/OrderTracking'
 import Admin from './pages/AdminPanel/AdminPanel'
+import DonateFood from './pages/DonateFood/DonateFood' 
+import NGODashboard from './pages/NGODashboard/NGODashboard' // Naya Import
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -36,6 +38,8 @@ const App = () => {
           <Route path='/myorders' element={<MyOrders />} />
           <Route path='/track-order' element={<OrderTracking />} />
           <Route path='/admin' element={<Admin />} />
+          <Route path='/donate' element={<DonateFood />} /> 
+          <Route path='/ngo' element={<NGODashboard />} /> {/* Naya Route */}
         </Routes>
       </div>
       

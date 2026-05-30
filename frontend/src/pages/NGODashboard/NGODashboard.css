@@ -1,0 +1,160 @@
+/* Main Dashboard Container */
+.ngo-dashboard {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean font stack */
+}
+
+/* Back Button Styling */
+.back-btn {
+    background: #333;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #ff4c24; /* DineAtDoor Theme */
+    transform: translateX(-3px); /* Subtle shift animation */
+}
+
+/* Headings */
+.ngo-dashboard h2 {
+    color: #ff4c24; /* DineAtDoor Tomato Theme */
+    font-size: 32px;
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.ngo-dashboard .subtitle {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 35px;
+}
+
+/* Donations Grid */
+.donation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* Donation Card */
+.donation-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* In teen lines se button hamesha bottom mein chipka rahega */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.donation-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(255, 76, 36, 0.12); /* Subtle orange glow on hover */
+}
+
+/* Restaurant Info */
+.restaurant-info h4 {
+    margin: 0 0 6px 0;
+    color: #222;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.restaurant-info .address {
+    font-size: 13.5px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.donation-card hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+/* Food Details */
+.food-details {
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: #444;
+    text-align: left;
+    flex-grow: 1; /* Yeh bache hue space ko cover kar lega */
+}
+
+.food-details p {
+    margin: 10px 0;
+}
+
+.expiry {
+    color: #e67e22;
+    background-color: #fdf5ee; /* Light background highlights time */
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 13.5px;
+}
+
+/* Claim Button */
+.claim-btn {
+    width: 100%;
+    background-color: #2ecc71; /* Green color for claiming */
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.claim-btn:hover {
+    background-color: #27ae60;
+}
+
+.claim-btn:active {
+    transform: scale(0.98); /* Click effect */
+}
+
+/* Loading & No Food States */
+.loading, .no-food {
+    text-align: center;
+    font-size: 18px;
+    margin: 60px auto;
+    color: #777;
+    padding: 30px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    max-width: 500px;
+}
+
+/* Responsive Fixes for Mobile Screens */
+@media (max-width: 600px) {
+    .ngo-dashboard {
+        padding: 20px;
+    }
+    .ngo-dashboard h2 {
+        font-size: 24px;
+    }
+    .donation-grid {
+        grid-template-columns: 1fr; /* Mobile par single column list ban jayegi */
+    }
+}

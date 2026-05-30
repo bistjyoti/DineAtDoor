@@ -6,6 +6,7 @@ import userRouter from './routes/userRoute.js'
 import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
 import restaurantRouter from './routes/restaurantRoute.js' 
+import donationRouter from './routes/donationRoutes.js' // NGO wala change 1
 import 'dotenv/config'
 
 const app = express()
@@ -20,6 +21,7 @@ app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
 app.use("/api/restaurant", restaurantRouter) 
+app.use("/api/donations", donationRouter) // NGO wala change 2
 app.use("/images", express.static('uploads'))
 
 app.get("/", (req, res) => {
