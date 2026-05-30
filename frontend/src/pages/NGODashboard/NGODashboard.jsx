@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'; // 🔥 useConte
 import axios from 'axios';
 import './NGODashboard.css';
 import { useNavigate } from 'react-router-dom';
-import { StoreContext } from '../../context/StoreContext.jsx'; // 🔥 Fixed: Extension (.jsx) explicitly added for Vercel bundler safety
+import { StoreContext } from '/src/context/StoreContext'; // 🔥 Fixed: Absolute path resolution to bypass case-sensitivity bugs
 
 // Testing ke liye dummy NGO ID di hai jab tak login link nahi hota
 const NGODashboard = ({ ngoId = "65f1a2b3c4d5e6f7a8b9c0d9" }) => {
