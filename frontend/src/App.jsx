@@ -39,7 +39,7 @@ const App = () => {
           <Route path='/track-order' element={<OrderTracking />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/donate' element={<DonateFood />} /> 
-          <Route path='/ngo' element={<NGODashboard />} /> {/* Naya Route */}
+          <Route path='/ngo' element={<NGODashboard />} /> {/* Naya Route Added */}
         </Routes>
       </div>
       

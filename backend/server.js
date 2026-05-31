@@ -12,10 +12,14 @@ import 'dotenv/config'
 const app = express()
 const port = process.env.PORT || 4000 
 
+// 🔥 Pro-Tip 1: Body parser limits (Important for image uploads)
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-app.use(cors())        
 
+// 🔥 Pro-Tip 2: CORS Configuration (Taki Vercel frontend se data block na ho)
+app.use(cors()) 
+
+// Routes setup
 app.use("/api/food", foodRouter)
 app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
@@ -25,14 +29,15 @@ app.use("/api/donations", donationRouter) // NGO wala change 2
 app.use("/images", express.static('uploads'))
 
 app.get("/", (req, res) => {
-    res.send("API working")
+    res.send("API working - DineAtDoor Backend is Live! 🚀")
 })
 
+// Database and Server Start logic
 const startServer = async () => {
     try {
         await connectDB() 
         app.listen(port, () => {
-            console.log(`Server started on http://localhost:${port}`)
+            console.log(`Server started on port ${port}`)
             console.log("DineAtDoor is ready for action! ✅")
         })
     } catch (err) {
