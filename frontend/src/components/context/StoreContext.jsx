@@ -31,10 +31,10 @@ const StoreContextProvider = (props) => {
         return localStorage.getItem('isFlashSaleOn') === 'true';
     });
     
-    // 🔥 Correction: Intelligent URL logic jo Vercel aur Local dono ko handle karega
+    // 🔥 FIXED: Ab ye sidha tere Render backend se baat karega!
     const url = window.location.hostname === "localhost" 
         ? "http://localhost:4000" 
-        : "https://dine-at-door-backend.vercel.app"; // Yahan apna asli Backend Vercel link daalo
+        : "https://dineatdoor.onrender.com"; // Tera naya live Render link! 🚀
 
     useEffect(() => {
         localStorage.setItem("allOrders", JSON.stringify(orders));
