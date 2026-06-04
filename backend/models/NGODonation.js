@@ -3,8 +3,12 @@ import mongoose from 'mongoose';
 const NGODonationSchema = new mongoose.Schema({
   restaurantId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'restaurant',
+    required: false
+  },
+  restaurantName: {
+    type: String,
+    default: ''
   },
   foodItems: {
     type: String,
