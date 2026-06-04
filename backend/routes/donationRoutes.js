@@ -5,9 +5,10 @@ import NGODonation from '../models/NGODonation.js';
 // 1. Restaurant se Donation Post karna
 router.post('/donate', async (req, res) => {
   try {
-    const { foodItems, quantity, expiryTime, restaurantId } = req.body;
+    const { foodItems, quantity, expiryTime, restaurantId, restaurantName } = req.body;
     const newDonation = new NGODonation({
-      restaurantId,
+      restaurantId: restaurantId || undefined,
+      restaurantName: restaurantName || '',
       foodItems,
       quantity,
       expiryTime,
@@ -16,6 +17,7 @@ router.post('/donate', async (req, res) => {
     await newDonation.save();
     res.status(201).json({ message: "Khana donate ho gaya! ✅" });
   } catch (error) {
+    console.error("Donation save error:", error);
     res.status(500).json({ error: "Donation fail ho gaya!" });
   }
 });
@@ -24,7 +26,7 @@ router.post('/donate', async (req, res) => {
 router.get('/available', async (req, res) => {
   try {
     const availableFood = await NGODonation.find({ status: 'Available' })
-      .populate('restaurantId', 'name address');
+      .populate('restaurantId', 'name location');
     res.status(200).json(availableFood);
   } catch (error) {
     res.status(500).json({ error: "Data fetch nahi ho raha." });
