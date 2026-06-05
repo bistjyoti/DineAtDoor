@@ -1,27 +1,38 @@
 import nodemailer from 'nodemailer';
 
-// Email bhejne wala transporter setup
+// ✉️ SECURE TRANSPORTER: Credentials .env file se automatic load honge
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'bistjyoti64@gmail.com', // ✅ Ekdum sahi hai tumhari Gmail ID
-        pass: 'yowcpjrhucdzcjra'      // ✅ Ekdum sahi hai tera App Password bina spaces ke
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS      
     }
 });
 
+/**
+ * Sends a professional claim notification email to the restaurant
+ * @param {string} restaurantEmail - Target restaurant registered email
+ * @param {string} restaurantName - Name of the restaurant
+ * @param {string} foodItems - Claimed food description
+ * @param {string} quantity - Quantity of the food
+ */
 export const sendClaimEmail = async (restaurantEmail, restaurantName, foodItems, quantity) => {
     try {
         const mailOptions = {
-            from: '"DineAtDoor 🍲" <bistjyoti64@gmail.com>', // 🎯 FIXED: Yahan tumhari real Gmail ID daal di hai
-            to: restaurantEmail || "bistjyoti64@gmail.com", // 🎯 FIXED: Agar restaurant ka email na mile toh testing ke liye tumhare paas hi mail aayega
-            subject: '🎉 Great News!Your Donated Food is Claimed!',
+            // Sender name customized professionally
+            from: `"DineAtDoor 🍲" <${process.env.EMAIL_USER}>`, 
+            // Fallback: Agar restaurant email nahi milta toh testing ke liye tumhari email par aayega
+            to: restaurantEmail || process.env.EMAIL_USER, 
+            subject: '🎉 Great News! Your Donated Food Has Been Claimed!',
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                     <div style="text-align: center; border-bottom: 2px solid #2ecc71; padding-bottom: 10px;">
                         <h1 style="color: #2ecc71; margin: 0;">DineAtDoor 🍲</h1>
                     </div>
                     <h2 style="color: #2c3e50; font-size: 20px;">Hello ${restaurantName},</h2>
-                    <p style="font-size: 16px; color: #333; line-height: 1.5;">The food you donated to a noble cause has been successfully. <b style="color: #2ecc71;">Claim</b> claimed by an organization!</p>
+                    
+                    <!-- 🎯 FIXED TEXT: Sentence structured cleanly and professionally -->
+                    <p style="font-size: 16px; color: #333; line-height: 1.5;">Great news! The food surplus you generously donated has been successfully <b style="color: #2ecc71;">Claimed</b> by a registered organization.</p>
                     
                     <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ff4757;">
                         <h4 style="margin-top: 0; color: #ff4757; font-size: 16px;">Donation Details:</h4>
@@ -29,16 +40,16 @@ export const sendClaimEmail = async (restaurantEmail, restaurantName, foodItems,
                         <p style="margin: 5px 0;"><b>Quantity:</b> ${quantity}</p>
                     </div>
                     
-                    <p style="font-size: 14px; color: #555;">NGO team will reach to your address soon. Please keep the food packets ready.Thank You</p>
+                    <p style="font-size: 14px; color: #555;">An NGO logistics team will arrive at your registered address shortly to collect the package. Please ensure the food packets are ready for handover.</p>
                     <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-                    <p style="font-size: 12px; color: #999; text-align: center;">Thank you for making a difference and reducing food waste! 💚</p>
+                    <p style="font-size: 12px; color: #999; text-align: center;">Thank you for your kindness and for helping us reduce food waste! 💚</p>
                 </div>
             `
         };
 
         await transporter.sendMail(mailOptions);
-        console.log(`✉️ Email successfully sent to ${restaurantName}!`);
+        console.log(`✉️ Email successfully dispatched to restaurant: ${restaurantName} (${restaurantEmail || 'Backup Mail'})`);
     } catch (error) {
-        console.error("❌ Email Sending Failed:", error);
+        console.error("❌ Nodemailer Email Transmission Failed:", error);
     }
 };

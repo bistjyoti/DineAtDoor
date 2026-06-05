@@ -83,7 +83,7 @@ router.get('/list', async (req, res) => {
         .populate({
             path: 'restaurantId',
             select: 'name address location email', // Included email field just in case frontend needs it
-            model: 'restaurant' 
+            model: 'Restaurant' // 🎯 FIXED: Model ref Capital kiya standard convention ke liye
         }); 
 
         res.status(200).json({ 
@@ -117,19 +117,18 @@ router.patch('/claim/:id', async (req, res) => {
             return res.status(404).json({ success: false, message: "Donation nahi mila!" });
         }
 
-        // 2. 🎯 SMART RE-POPULATE: Idhar hum specific donation object ko populate karke 
-        // restaurant ka original email database se nikal rahe hain
+        // 2. 🎯 SMART RE-POPULATE: Database se original fresh email reference pull karenge
         const populatedDonation = await NGODonation.findById(donation._id).populate({
             path: 'restaurantId',
             select: 'email',
-            model: 'restaurant'
+            model: 'Restaurant' // 🎯 FIXED: Model ref Capital kiya
         });
 
         const realRestaurantEmail = populatedDonation.restaurantId?.email;
         const targetName = donation.restaurantName;
 
-        // 3. Asli email target restaurant ko bhejenge
-        sendClaimEmail(targetName, realRestaurantEmail, donation.foodItems, donation.quantity);
+        // 3. Asli email target restaurant ko bhejenge (with await protection)
+        await sendClaimEmail(targetName, realRestaurantEmail, donation.foodItems, donation.quantity);
 
         res.status(200).json({ 
             success: true, 
