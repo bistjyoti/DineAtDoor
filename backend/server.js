@@ -1,3 +1,4 @@
+import 'dotenv/config' // 🎯 FIXED: Sabse pehle variables load honge, taaki database ya routes me koi config miss na ho!
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './config/db.js'
@@ -6,17 +7,16 @@ import userRouter from './routes/userRoute.js'
 import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
 import restaurantRouter from './routes/restaurantRoute.js' 
-import donationRouter from './routes/donationRoutes.js' // NGO wala change 1
-import 'dotenv/config'
+import donationRouter from './routes/donationRoutes.js' 
 
 const app = express()
 const port = process.env.PORT || 4000 
 
-// 🔥 Pro-Tip 1: Body parser limits (Important for image uploads)
+// 🔥 Body parser limits (Important for image uploads)
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
-// 🔥 Pro-Tip 2: CORS Configuration (Taki Vercel frontend se data block na ho)
+// 🔥 CORS Configuration (Taki Vercel frontend se data block na ho)
 app.use(cors()) 
 
 // Routes setup
@@ -25,7 +25,10 @@ app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
 app.use("/api/restaurant", restaurantRouter) 
-app.use("/api/donations", donationRouter) // NGO wala change 2
+
+// 🎯 SYNCED: NGO/Donation Route Connection
+app.use("/api/donations", donationRouter) 
+
 app.use("/images", express.static('uploads'))
 
 app.get("/", (req, res) => {

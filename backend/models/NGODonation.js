@@ -3,8 +3,19 @@ import mongoose from 'mongoose';
 const NGODonationSchema = new mongoose.Schema({
   restaurantId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    // 🎯 PRO-TIP: Model reference hamesha Capital letter 'Restaurant' rakhna standard hota hai
+    ref: 'Restaurant', 
     required: true
+  },
+  // 🔥 Pro-Tip 1: Manual name field (Backend protection)
+  restaurantName: {
+    type: String,
+    default: ""
+  },
+  // 🎯 CRITICAL FIX: Address field missing thi, isliye dashboard khali tha!
+  restaurantAddress: {
+    type: String,
+    default: ""
   },
   foodItems: {
     type: String,
@@ -25,7 +36,7 @@ const NGODonationSchema = new mongoose.Schema({
   },
   ngoId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User', 
     default: null
   }
 }, { timestamps: true });
