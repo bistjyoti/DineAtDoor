@@ -94,7 +94,7 @@ router.get('/list', async (req, res) => {
         console.error("Fetch List Error:", error);
         res.status(500).json({ 
             success: false, 
-            message: "Data fetch nahi ho raha.", 
+            message: "Data cannot be fetched.", 
             error: error.message 
         });
     }
@@ -132,14 +132,14 @@ router.patch('/claim/:id', async (req, res) => {
 
         res.status(200).json({ 
             success: true, 
-            message: "Food claimed successfully! Email sent to restaurant. 🎉", 
+            message: "Food claimed successfully! Email sent to restaurant.", 
             donation 
         });
     } catch (error) {
         console.error("Claim Error:", error);
         res.status(500).json({ 
             success: false, 
-            message: "Claim fail ho gaya.", 
+            message: "Claim failed.", 
             error: error.message 
         });
     }
@@ -164,7 +164,7 @@ router.get('/history/:ngoId', async (req, res) => {
         console.error("History Fetch Error:", error);
         res.status(500).json({ 
             success: false, 
-            message: "History load nahi ho payi.", 
+            message: "History cannot be loaded.", 
             error: error.message 
         });
     }

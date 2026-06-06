@@ -14,14 +14,17 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
   const [dishSuggestions, setDishSuggestions] = useState([]);
   const { transcript, interimTranscript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
- 
   useEffect(() => {
     const SpeechText = transcript || interimTranscript;
     
     if (SpeechText && SpeechText.trim() !== "") {
-      setSearchQuery(SpeechText);
+      // 💡 ONLY CHANGE HERE: Pehle ke saare sentence words mein se sirf bilkul LATEST bola hua word select karne ke liye
+      const wordsArray = SpeechText.trim().split(" ");
+      const latestWord = wordsArray[wordsArray.length - 1];
+
+      setSearchQuery(latestWord);
     
-      const cleanText = SpeechText.toLowerCase().trim();
+      const cleanText = latestWord.toLowerCase().trim();
       const matches = food_list.filter(item => 
         item.name.toLowerCase().includes(cleanText) || 
         item.category.toLowerCase().includes(cleanText)

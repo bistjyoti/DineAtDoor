@@ -1,48 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const VoiceInput = ({ onVoiceInput, placeholder = "Click to speak..." }) => {
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [isBrowserSupported, setIsBrowserSupported] = useState(false);
-    const recognitionRef = React.useRef(null);
+    const recognitionRef = useRef(null);
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         
         if (SpeechRecognition) {
             setIsBrowserSupported(true);
-            recognitionRef.current = new SpeechRecognition();
+            const recognition = new SpeechRecognition();
 
-            recognitionRef.current.continuous = false;
-            recognitionRef.current.interimResults = true;
-            recognitionRef.current.lang = 'en-US';
+            // Strict settings taaki text bar-bar repeat na ho aur memory clear rahe
+            recognition.continuous = false;
+            recognition.interimResults = false; 
+            recognition.lang = 'en-US';
 
-            recognitionRef.current.onstart = () => {
+            recognition.onstart = () => {
                 setIsListening(true);
             };
 
-            recognitionRef.current.onresult = (event) => {
-                let interimTranscript = '';
+            recognition.onresult = (event) => {
+                const currentResultIndex = event.resultIndex;
+                const finalTranscript = event.results[currentResultIndex][0].transcript;
 
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-
-                    if (event.results[i].isFinal) {
-                        setTranscript(transcript);
-                        onVoiceInput(transcript);
-                    } else {
-                        interimTranscript += transcript;
+                if (event.results[currentResultIndex].isFinal) {
+                    // Ekdum fresh aur bina extra space ka text set hoga
+                    const cleanTranscript = finalTranscript.trim();
+                    setTranscript(cleanTranscript);
+                    
+                    if (onVoiceInput) {
+                        onVoiceInput(cleanTranscript); // Parent component ko direct update karega
                     }
                 }
             };
 
-            recognitionRef.current.onerror = (event) => {
+            recognition.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
-            };
-
-            recognitionRef.current.onend = () => {
                 setIsListening(false);
             };
+
+            recognition.onend = () => {
+                setIsListening(false);
+            };
+
+            recognitionRef.current = recognition;
         }
 
         return () => {
@@ -53,16 +57,32 @@ const VoiceInput = ({ onVoiceInput, placeholder = "Click to speak..." }) => {
     }, [onVoiceInput]);
 
     const startListening = () => {
-        setTranscript('');
-        recognitionRef.current?.start();
+        // Purani memory poori tarah flush karne ke liye
+        setTranscript(''); 
+        if (onVoiceInput) {
+            onVoiceInput(''); 
+        }
+
+        if (recognitionRef.current) {
+            try {
+                recognitionRef.current.start();
+            } catch (e) {
+                // Agar process pehle se open ho toh refresh karke chalayega
+                recognitionRef.current.stop();
+                setTimeout(() => recognitionRef.current.start(), 150);
+            }
+        }
     };
 
     const stopListening = () => {
-        recognitionRef.current?.stop();
+        if (recognitionRef.current) {
+            recognitionRef.current.stop();
+        }
     };
 
     const speakText = (text) => {
-        if ('speechSynthesis' in window) {
+        if ('speechSynthesis' in window && text) {
+            window.speechSynthesis.cancel(); // Purani TTS voice ko clear karne ke liye
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 1;
             window.speechSynthesis.speak(utterance);
@@ -70,7 +90,7 @@ const VoiceInput = ({ onVoiceInput, placeholder = "Click to speak..." }) => {
     };
 
     if (!isBrowserSupported) {
-        return <p>Speech Recognition not supported in this browser</p>;
+        return <p style={{ color: 'red', fontWeight: 'bold' }}>Speech Recognition not supported in this browser</p>;
     }
 
     return (
@@ -111,8 +131,8 @@ const VoiceInput = ({ onVoiceInput, placeholder = "Click to speak..." }) => {
             </div>
 
             <p style={styles.status}>
-                {isListening ? '🎤 Listening...' : ''}
-                {transcript && !isListening ? '✓ Captured' : ''}
+                {isListening ? '🎤 Live Listening... Speak now!' : ''}
+                {transcript && !isListening ? '✓ Captured Successfully' : ''}
             </p>
         </div>
     );
@@ -124,7 +144,8 @@ const styles = {
         border: '1px solid #ddd',
         borderRadius: '8px',
         marginBottom: '15px',
-        backgroundColor: '#f9f9f9'
+        backgroundColor: '#f9f9f9',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
     },
     input: {
         width: '100%',
@@ -132,7 +153,8 @@ const styles = {
         marginBottom: '10px',
         border: '1px solid #ccc',
         borderRadius: '4px',
-        fontSize: '14px'
+        fontSize: '14px',
+        boxSizing: 'border-box'
     },
     buttonGroup: {
         display: 'flex',
@@ -145,7 +167,8 @@ const styles = {
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '14px',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        transition: 'background-color 0.2s'
     },
     startButton: {
         backgroundColor: '#4CAF50',
@@ -161,8 +184,9 @@ const styles = {
     },
     status: {
         marginTop: '10px',
-        fontSize: '12px',
-        color: '#666'
+        fontSize: '13px',
+        color: '#d9534f',
+        fontWeight: '500'
     }
 };
 
