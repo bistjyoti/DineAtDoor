@@ -18,7 +18,6 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
     const SpeechText = transcript || interimTranscript;
     
     if (SpeechText && SpeechText.trim() !== "") {
-      // 💡 ONLY CHANGE HERE: Pehle ke saare sentence words mein se sirf bilkul LATEST bola hua word select karne ke liye
       const wordsArray = SpeechText.trim().split(" ");
       const latestWord = wordsArray[wordsArray.length - 1];
 
@@ -31,7 +30,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
       );
       setDishSuggestions(matches.slice(0, 5));
     }
-  }, [transcript, interimTranscript]);
+  }, [transcript, interimTranscript, food_list, setSearchQuery]);
 
   const handleSearchTyping = (text) => {
     setSearchQuery(text);
@@ -49,7 +48,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
 
   const toggleVoiceSession = () => {
     if (!browserSupportsSpeechRecognition) {
-      alert("Browser speech recognition doesnot support!");
+      alert("Browser speech recognition does not support!");
       return;
     }
     if (listening) {
@@ -124,7 +123,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
           <div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.98)', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '12vh'}}>
             <div style={{ width: '90%', maxWidth: '600px', position: 'relative' }}>
               
-              <span onClick={() => { setShowSearchModal(false); SpeechRecognition.stopListening(); }} style={{ position: 'absolute', right: '10px', top: '-50px', fontSize: '38px', cursor: 'pointer' }}>×</span>
+              <span onClick={() => { setShowSearchModal(false); SpeechRecognition.stopListening(); resetTranscript(); }} style={{ position: 'absolute', right: '10px', top: '-50px', fontSize: '38px', cursor: 'pointer' }}>×</span>
               
               {listening && (
                 <div style={{ color: '#ff4d4d', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -142,7 +141,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
               />
               
               {dishSuggestions.map((dish, i) => (
-                <div key={i} onClick={() => {setSearchQuery(dish.name); setShowSearchModal(false); SpeechRecognition.stopListening();}} style={{ padding: '15px', cursor: 'pointer', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>{dish.name}</div>
+                <div key={i} onClick={() => {setSearchQuery(dish.name); setShowSearchModal(false); SpeechRecognition.stopListening(); resetTranscript();}} style={{ padding: '15px', cursor: 'pointer', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>{dish.name}</div>
               ))}
             </div>
           </div>
