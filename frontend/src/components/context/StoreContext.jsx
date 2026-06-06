@@ -13,7 +13,7 @@ const StoreContextProvider = (props) => {
     const [food_list, setFoodList] = useState([]); 
     const [restaurant_list, setRestaurantList] = useState([]);
     const [cartItems, setCartItems] = useState({});
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(localStorage.getItem("token") || ""); // 🔥 FIXED: Hydrate token instantly from localStorage
     const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
     
     const [currentLocation, setCurrentLocation] = useState("Kishanpur, Roorkee 📍");
@@ -117,7 +117,7 @@ const StoreContextProvider = (props) => {
             }
         };
         loadInitialAppState();
-    }, [fetchFoodList, url]);
+    }, [fetchFoodList, url, token]); // 🔥 FIXED: Added token here to re-fetch cart details on authentication state changes
 
     useEffect(() => {
         if (locationCoords) {
