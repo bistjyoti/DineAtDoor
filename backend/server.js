@@ -1,4 +1,4 @@
-import 'dotenv/config' // 🎯 FIXED: Sabse pehle variables load honge, taaki database ya routes me koi config miss na ho!
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './config/db.js'
@@ -12,21 +12,17 @@ import donationRouter from './routes/donationRoutes.js'
 const app = express()
 const port = process.env.PORT || 4000 
 
-// 🔥 Body parser limits (Important for image uploads)
+// Middleware
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-
-// 🔥 CORS Configuration (Taki Vercel frontend se data block na ho)
 app.use(cors()) 
 
-// Routes setup
+// Routes
 app.use("/api/food", foodRouter)
 app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
 app.use("/api/restaurant", restaurantRouter) 
-
-// 🎯 SYNCED: NGO/Donation Route Connection
 app.use("/api/donations", donationRouter) 
 
 app.use("/images", express.static('uploads'))
@@ -35,7 +31,7 @@ app.get("/", (req, res) => {
     res.send("API working - DineAtDoor Backend is Live! 🚀")
 })
 
-// Database and Server Start logic
+// Database and Server Start
 const startServer = async () => {
     try {
         await connectDB() 

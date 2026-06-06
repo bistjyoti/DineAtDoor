@@ -31,10 +31,10 @@ const StoreContextProvider = (props) => {
         return localStorage.getItem('isFlashSaleOn') === 'true';
     });
     
-    // 🔥 FIXED: Ab ye sidha tere Render backend se baat karega!
+    // 🔥 FIXED: Railway Backend URL (Ensure this matches your Railway project link)
     const url = window.location.hostname === "localhost" 
         ? "http://localhost:4000" 
-        : "https://dineatdoor.onrender.com"; // Tera naya live Render link! 🚀
+        : "https://dineatdoor-production.up.railway.app"; 
 
     useEffect(() => {
         localStorage.setItem("allOrders", JSON.stringify(orders));
