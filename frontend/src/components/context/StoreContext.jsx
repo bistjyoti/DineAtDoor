@@ -31,10 +31,12 @@ const StoreContextProvider = (props) => {
         return localStorage.getItem('isFlashSaleOn') === 'true';
     });
     
-    // 🔥 FIXED: Railway Backend URL (Ensure this matches your Railway project link)
-    const url = window.location.hostname === "localhost" 
-        ? "http://localhost:4000" 
-        : "https://dineatdoor-production.up.railway.app"; 
+    // 🔥 FIXED: Prioritize build variable, then look for environment checks safely
+    const url = process.env.VITE_API_URL || (
+        window.location.hostname === "localhost" 
+            ? "http://localhost:4000" 
+            : "https://dineatdoor-production.up.railway.app"
+    ); 
 
     useEffect(() => {
         localStorage.setItem("allOrders", JSON.stringify(orders));
