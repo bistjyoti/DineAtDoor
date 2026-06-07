@@ -31,12 +31,9 @@ const StoreContextProvider = (props) => {
         return localStorage.getItem('isFlashSaleOn') === 'true';
     });
     
-    // 🔥 FIXED: Prioritize build variable, then look for environment checks safely
-    const url = process.env.VITE_API_URL || (
-        window.location.hostname === "localhost" 
-            ? "http://localhost:4000" 
-            : "https://dineatdoor-production.up.railway.app"
-    ); 
+    // Use Vite's native import.meta.env for environment variables (process.env is not available in browser builds)
+    const url = import.meta.env.VITE_API_URL || "https://dineatdoor-production.up.railway.app";
+
 
     useEffect(() => {
         localStorage.setItem("allOrders", JSON.stringify(orders));
