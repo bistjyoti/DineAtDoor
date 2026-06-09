@@ -47,7 +47,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
   };
 
   const toggleVoiceSession = () => {
-    if (!browserSupportsSpeechRecognition) {
+    if (!browserSupportsSpeechRecognition && !(window.SpeechRecognition || window.webkitSpeechRecognition)) {
       alert("Browser speech recognition does not support!");
       return;
     }
