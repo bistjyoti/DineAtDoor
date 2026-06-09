@@ -86,10 +86,10 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
           <a href='#footer' onClick={() => setMenu('contact-us')} className={menu === 'contact-us' ? 'active' : ''}>contact us</a>
         </ul>
         
-        <div className="navbar-right" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="navbar-right" style={{ display: 'flex', alignItems: 'center', gap: '20px', visibility: 'visible' }}>
           <button 
             onClick={toggleVoiceSession}
-            style={{ background: listening ? '#ff4d4d' : 'tomato', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '20px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
+            style={{ background: listening ? '#ff4d4d' : 'tomato', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '20px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'inline-block', visibility: 'visible', opacity: 1 }}
           >
             {listening ? "🎙️ Listening..." : "🎤 Speak"}
           </button>
@@ -141,14 +141,7 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
               />
               
               {dishSuggestions.map((dish, i) => (
-                <div key={i} onClick={() => { 
-                  setSearchQuery(dish.name); 
-                  setShowSearchModal(false); 
-                  SpeechRecognition.stopListening(); 
-                  resetTranscript(); 
-                  const targetRestaurantId = dish.restaurantId || dish.restaurant_id || '';
-                  navigate(`/menu/${targetRestaurantId}#dish-${dish._id}`); 
-                }} style={{ padding: '15px', cursor: 'pointer', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>{dish.name}</div>
+                <div key={i} onClick={() => {setSearchQuery(dish.name); setShowSearchModal(false); SpeechRecognition.stopListening(); resetTranscript();}} style={{ padding: '15px', cursor: 'pointer', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>{dish.name}</div>
               ))}
             </div>
           </div>
