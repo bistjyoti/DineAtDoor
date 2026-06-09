@@ -13,7 +13,6 @@ const NGOHistory = ({ ngoId = "65f1a2b3c4d5e6f7a8b9c0d9" }) => {
     const fetchHistory = async () => {
         try {
             setLoading(true);
-            // 🎯 Calling our freshly created history backend API route
             const response = await axios.get(`${url}/api/donations/history/${ngoId}`);
             if (response.data && response.data.success) {
                 setHistoryList(response.data.data || []);

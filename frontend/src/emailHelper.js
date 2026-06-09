@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 
-// ✉️ SECURE TRANSPORTER: Credentials .env file se automatic load honge
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -9,21 +8,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-/**
- * Sends a professional claim notification email to the restaurant
- * @param {string} restaurantEmail - Target restaurant registered email
- * @param {string} restaurantName - Name of the restaurant
- * @param {string} foodItems - Claimed food description
- * @param {string} quantity - Quantity of the food
- */
 export const sendClaimEmail = async (restaurantEmail, restaurantName, foodItems, quantity) => {
     try {
         const mailOptions = {
-            // Sender name customized professionally
             from: `"DineAtDoor 🍲" <${process.env.EMAIL_USER}>`, 
-            // Fallback: Agar restaurant email nahi milta toh testing ke liye tumhari email par aayega
             to: restaurantEmail || process.env.EMAIL_USER, 
-            subject: '🎉 Great News! Your Donated Food Has Been Claimed!',
+            subject: 'Great News! Your Donated Food Has Been Claimed!',
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                     <div style="text-align: center; border-bottom: 2px solid #2ecc71; padding-bottom: 10px;">
@@ -31,7 +21,6 @@ export const sendClaimEmail = async (restaurantEmail, restaurantName, foodItems,
                     </div>
                     <h2 style="color: #2c3e50; font-size: 20px;">Hello ${restaurantName},</h2>
                     
-                    <!-- 🎯 FIXED TEXT: Sentence structured cleanly and professionally -->
                     <p style="font-size: 16px; color: #333; line-height: 1.5;">Great news! The food surplus you generously donated has been successfully <b style="color: #2ecc71;">Claimed</b> by a registered organization.</p>
                     
                     <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ff4757;">

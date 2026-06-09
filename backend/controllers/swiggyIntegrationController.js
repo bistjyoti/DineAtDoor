@@ -25,7 +25,6 @@ const getRestaurantsByLocation = async (req, res) => {
             }
         }
 
-
         const response = await axios.get(`${SWIGGY_BASE_URL}/restaurants`, {
             params: {
                 lat: latitude,
@@ -139,7 +138,7 @@ const getAllRestaurantDishes = async (req, res) => {
 
         const restaurantDishes = [];
         
-        for (const restaurant of restaurants.slice(0, 10)) { // Limit to first 10 restaurants to avoid rate limits
+        for (const restaurant of restaurants.slice(0, 10)) { 
             try {
                 const menuResponse = await axios.get(`${SWIGGY_BASE_URL}/restaurants/${restaurant.id}`, {
                     headers: {

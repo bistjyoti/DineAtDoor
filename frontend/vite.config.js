@@ -13,7 +13,7 @@ export default defineConfig({
     watch: {
       usePolling: false
     },
-    // local testing ke liye proxy thik hai, par production par use nahi hogi
+  
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
@@ -23,11 +23,10 @@ export default defineConfig({
     }
   },
 
-  // 🔥 YAHAN HUMNE TERA LIVE RAILWAY BACKEND LINK SET KAR DIYA!
   define: {
     'process.env.VITE_API_URL': JSON.stringify(
       process.env.NODE_ENV === 'production' 
-        ? 'https://dineatdoor-production.up.railway.app' // Tera asli live backend URL!
+        ? 'https://dineatdoor-production.up.railway.app' 
         : 'http://localhost:4000'
     )
   },

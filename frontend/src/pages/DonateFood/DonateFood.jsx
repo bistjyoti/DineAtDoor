@@ -7,8 +7,6 @@ import { StoreContext } from '../../components/context/StoreContext';
 const DonateFood = ({ restaurantId = "65f1a2b3c4d5e6f7a8b9c0d1" }) => { 
     const { url } = useContext(StoreContext);
     const navigate = useNavigate();
-
-    // 🎯 State updated to include restaurant details
     const [foodData, setFoodData] = useState({
         restaurantName: '',
         restaurantAddress: '',
@@ -24,17 +22,16 @@ const DonateFood = ({ restaurantId = "65f1a2b3c4d5e6f7a8b9c0d1" }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // URL logic for backend call
+            const formattedExpiryTime = foodData.expiryTime ? new Date(foodData.expiryTime).toISOString() : '';
+            
             const response = await axios.post(`${url}/api/donations/donate`, {
                 ...foodData,
+                expiryTime: formattedExpiryTime,
                 restaurantId 
             });
             
-            alert(response.data.message || "Khana donate ho gaya! ✅");
+            alert(response.data.message || "Food is donated ✅");
             
-            // 🎯 BUG 1 FIX: Removed navigate('/ngo') so it stays on the same page.
-            
-            // 🎯 Form reset after successful post
             setFoodData({ 
                 restaurantName: '', 
                 restaurantAddress: '', 
@@ -44,7 +41,7 @@ const DonateFood = ({ restaurantId = "65f1a2b3c4d5e6f7a8b9c0d1" }) => {
             });
         } catch (error) {
             console.error("Donation Error:", error);
-            const errorMsg = error.response?.data?.message || "Connection fail! Juhiee's console dekho.";
+            const errorMsg = error.response?.data?.message || "Connection fail!";
             alert(errorMsg);
         }
     };
@@ -52,12 +49,10 @@ const DonateFood = ({ restaurantId = "65f1a2b3c4d5e6f7a8b9c0d1" }) => {
     return (
         <div className="donate-container">
             <div className="donate-card">
-                <h3>Surplus Food Donation 🍲</h3>
+                <h3>Surplus Food Donation </h3>
                 <p className="subtitle">A small effort can fill someone's stomach.</p>
                 
                 <form onSubmit={handleSubmit} className="donate-form">
-                    
-                    {/* 🏢 Section 1: Restaurant Identity */}
                     <div className="form-section">
                         <h4>🏢 Restaurant Details</h4>
                         <div className="input-group">
@@ -86,8 +81,6 @@ const DonateFood = ({ restaurantId = "65f1a2b3c4d5e6f7a8b9c0d1" }) => {
                     </div>
 
                     <hr className="divider" />
-
-                    {/* 🍲 Section 2: Food Info */}
                     <div className="form-section">
                         <h4>🍲 Food Details</h4>
                         <div className="input-group">

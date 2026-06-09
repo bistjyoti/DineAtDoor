@@ -14,8 +14,6 @@ const PlaceOrder = () => {
 
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); 
-
-  // Razorpay Script ko runtime par load karne ke liye helper function
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement('script');
@@ -86,7 +84,6 @@ const PlaceOrder = () => {
     try {
       setIsSubmitting(true);
 
-      // 1. Razorpay script ko load karo browser mein
       const isScriptLoaded = await loadRazorpayScript();
       if (!isScriptLoaded) {
         alert("Failed to load Razorpay SDK. Check your internet connection.");
@@ -95,18 +92,16 @@ const PlaceOrder = () => {
       }
 
       addOrderToAdmin({ items: orderItems, totalAmount: orderData.amount, address: data });
-      
-      // 2. Humare backend se Razorpay order create karwao
+
+
       const response = await axios.post(`${url}/api/order/place`, orderData, { 
         headers: { token: token } 
       });
       
       if (response.data.success) {
         const { razorpayOrder, localOrderId } = response.data;
-
-        // 3. Razorpay Checkout Popup Configuration Options
         const options = {
-          key: "rzp_test_SulDVCP4qQQeov", // Tumhari naye generated Test Key ID yahan set ho gayi hai
+          key: "rzp_test_SulDVCP4qQQeov", 
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency,
           name: "DineAtDoor",
@@ -114,7 +109,7 @@ const PlaceOrder = () => {
           order_id: razorpayOrder.id,
           handler: async function (paymentResponse) {
             try {
-              // Payment success hone ke baad backend par verify karo
+            
               const verifyResponse = await axios.post(`${url}/api/order/verify`, {
                 orderId: localOrderId,
                 success: true,
@@ -143,7 +138,6 @@ const PlaceOrder = () => {
           },
           modal: {
             ondismiss: async function() {
-              // Agar user bina payment kiye popup close kar deta hai
               await axios.post(`${url}/api/order/verify`, {
                 orderId: localOrderId,
                 success: false

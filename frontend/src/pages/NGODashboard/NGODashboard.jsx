@@ -7,11 +7,9 @@ import { StoreContext } from '../../components/context/StoreContext';
 const NGODashboard = ({ ngoId = "65f1a2b3c4d5e6f7a8b9c0d9" }) => {
     const [availableDonations, setAvailableDonations] = useState([]);
     const [loading, setLoading] = useState(true);
-    // ⏱️ LIVE TICKER: System time ko tracking state me rakha hai live update ke liye
     const [currentTime, setCurrentTime] = useState(new Date());
     const { url } = useContext(StoreContext); 
     const navigate = useNavigate(); 
-
     const fetchDonations = async (showLoading = false) => {
         try {
             if (showLoading) setLoading(true);
@@ -31,24 +29,22 @@ const NGODashboard = ({ ngoId = "65f1a2b3c4d5e6f7a8b9c0d9" }) => {
         }
     };
 
-    // 🔄 EFFECT 1: First time loading aur background polling (Har 5 seconds me auto-fetch)
     useEffect(() => {
         if (url) {
-            fetchDonations(true); // Sirf pehli baar loader dikhega
+            fetchDonations(true); 
 
             const pollInterval = setInterval(() => {
-                fetchDonations(false); // Background me silent sync bina loading screen ke
-            }, 5000); // 5 seconds interval
+                fetchDonations(false); 
+            }, 5000);
 
-            return () => clearInterval(pollInterval); // Cleanup interval on component unmount
+            return () => clearInterval(pollInterval); 
         }
     }, [url]);
 
-    // ⏱️ EFFECT 2: Live timer state tracker jo system clock ko match karega
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
-        }, 1000); // Live tracking every single second
+        }, 1000); 
 
         return () => clearInterval(timer);
     }, []);
@@ -66,7 +62,6 @@ const NGODashboard = ({ ngoId = "65f1a2b3c4d5e6f7a8b9c0d9" }) => {
         }
     };
 
-    // 🎯 LIVE CLIENT FILTER: Jo food expire ho chuka hai, use instant list se remove kar do
     const liveActiveDonations = availableDonations.filter((donation) => {
         return new Date(donation.expiryTime) > currentTime;
     });
@@ -82,8 +77,7 @@ const NGODashboard = ({ ngoId = "65f1a2b3c4d5e6f7a8b9c0d9" }) => {
             
             <h2>Available Food Donations Near You 🍲</h2>
             <p className="subtitle">Connecting surplus food with those who need it most.</p>
-            
-            {/* 🎯 FIXED: Map variable ab 'liveActiveDonations' use karega state tracking ke liye */}
+          
             {liveActiveDonations.length === 0 ? (
                 <div className="no-food">No active donations at the moment. Check back soon!</div>
             ) : (

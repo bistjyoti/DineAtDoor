@@ -1,12 +1,10 @@
-/* Main Dashboard Container */
 .ngo-dashboard {
     padding: 40px;
     max-width: 1200px;
     margin: 0 auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean font stack */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
 }
 
-/* Back Button Styling */
 .back-btn {
     background: #333;
     color: white;
@@ -24,13 +22,12 @@
 }
 
 .back-btn:hover {
-    background: #ff4c24; /* DineAtDoor Theme */
-    transform: translateX(-3px); /* Subtle shift animation */
+    background: #ff4c24; 
+    transform: translateX(-3px); 
 }
 
-/* Headings */
 .ngo-dashboard h2 {
-    color: #ff4c24; /* DineAtDoor Tomato Theme */
+    color: #ff4c24; 
     font-size: 32px;
     margin-top: 0;
     margin-bottom: 8px;
@@ -42,14 +39,12 @@
     margin-bottom: 35px;
 }
 
-/* Donations Grid */
 .donation-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
 }
 
-/* Donation Card */
 .donation-card {
     background: white;
     border-radius: 14px;
@@ -57,8 +52,6 @@
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
     border: 1px solid #f0f0f0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
-    /* In teen lines se button hamesha bottom mein chipka rahega */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -66,10 +59,9 @@
 
 .donation-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 8px 25px rgba(255, 76, 36, 0.12); /* Subtle orange glow on hover */
+    box-shadow: 0 8px 25px rgba(255, 76, 36, 0.12); 
 }
 
-/* Restaurant Info */
 .restaurant-info h4 {
     margin: 0 0 6px 0;
     color: #222;
@@ -90,13 +82,12 @@
     margin: 15px 0;
 }
 
-/* Food Details */
 .food-details {
     margin-bottom: 20px;
     font-size: 15px;
     color: #444;
     text-align: left;
-    flex-grow: 1; /* Yeh bache hue space ko cover kar lega */
+    flex-grow: 1; 
 }
 
 .food-details p {
@@ -105,17 +96,16 @@
 
 .expiry {
     color: #e67e22;
-    background-color: #fdf5ee; /* Light background highlights time */
+    background-color: #fdf5ee; 
     padding: 6px 10px;
     border-radius: 6px;
     display: inline-block;
     font-size: 13.5px;
 }
 
-/* Claim Button */
 .claim-btn {
     width: 100%;
-    background-color: #2ecc71; /* Green color for claiming */
+    background-color: #2ecc71; 
     color: white;
     border: none;
     padding: 14px;
@@ -131,10 +121,9 @@
 }
 
 .claim-btn:active {
-    transform: scale(0.98); /* Click effect */
+    transform: scale(0.98); 
 }
 
-/* Loading & No Food States */
 .loading, .no-food {
     text-align: center;
     font-size: 18px;
@@ -146,7 +135,6 @@
     max-width: 500px;
 }
 
-/* Responsive Fixes for Mobile Screens */
 @media (max-width: 600px) {
     .ngo-dashboard {
         padding: 20px;
@@ -155,6 +143,6 @@
         font-size: 24px;
     }
     .donation-grid {
-        grid-template-columns: 1fr; /* Mobile par single column list ban jayegi */
+        grid-template-columns: 1fr; 
     }
 }

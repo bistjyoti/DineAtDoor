@@ -141,7 +141,14 @@ const Navbar = ({ setShowLogin, searchQuery, setSearchQuery }) => {
               />
               
               {dishSuggestions.map((dish, i) => (
-                <div key={i} onClick={() => {setSearchQuery(dish.name); setShowSearchModal(false); SpeechRecognition.stopListening(); resetTranscript();}} style={{ padding: '15px', cursor: 'pointer', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>{dish.name}</div>
+                <div key={i} onClick={() => { 
+                  setSearchQuery(dish.name); 
+                  setShowSearchModal(false); 
+                  SpeechRecognition.stopListening(); 
+                  resetTranscript(); 
+                  const targetRestaurantId = dish.restaurantId || dish.restaurant_id || '';
+                  navigate(`/menu/${targetRestaurantId}#dish-${dish._id}`); 
+                }} style={{ padding: '15px', cursor: 'pointer', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>{dish.name}</div>
               ))}
             </div>
           </div>

@@ -35,18 +35,15 @@ const loginUser = async (req, res) => {
     let currentFaceDescriptor = req.body.currentFaceDescriptor || req.body.faceDescriptor;
 
     try {
-        // Validation 1: Email toh hamesha zaroori hai taaki pata chale account kiska hai
         if (!email) {
             return res.json({ success: false, message: "Email is required" });
         }
 
-        // Check karo user database mein hai ya nahi
         const user = await userModel.findOne({ email });
         if (!user) {
             return res.json({ success: false, message: "User does not exist" });
         }
 
-        // 🌟 AGAR FACE SCANNED DATA AAYA HAI ➔ PASSWORD BYPASS KARO
         if (currentFaceDescriptor && user.faceDescriptor && user.faceDescriptor.length > 0) {
             
             if (typeof currentFaceDescriptor === 'string') {
@@ -67,8 +64,7 @@ const loginUser = async (req, res) => {
             if (distance > strictThreshold) {
                 return res.json({ success: false, message: "Face verification failed" });
             }
-            
-            // Face match ho gaya! Ab bina password check kiye yahan se seedha login token bhej do
+
             const token = createToken(user._id);
             return res.json({
                 success: true,
@@ -81,7 +77,6 @@ const loginUser = async (req, res) => {
             });
         } 
         
-        // 🌟 AGAR FACE DATA NAHI AAYA HAI ➔ TABHI PASSWORD SE LOGIN HOGA
         else {
             if (!password) {
                 return res.json({ success: false, message: "Password is required when face is not scanned" });

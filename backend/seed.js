@@ -1,6 +1,5 @@
-// backend/seed.js
 import mongoose from "mongoose";
-import foodModel from "./models/foodModel.js"; // image_be4467.png ke hisaab se path
+import foodModel from "./models/foodModel.js"; 
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -27,11 +26,9 @@ const generate600Dishes = () => {
 
 const seedDB = async () => {
     try {
-        // .env se connection uthayega
         await mongoose.connect(process.env.MONGO_URI);
         console.log("Database connected for mass seeding... 🔌");
 
-        // Purana data clear karega
         await foodModel.deleteMany({});
 
         const allDishes = generate600Dishes();

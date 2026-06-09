@@ -173,7 +173,6 @@ const fetchRestaurantMenu = async (req, res) => {
 
         if (restaurantMenu.length === 0) restaurantMenu = makeFallbackMenuForRestaurant(restaurant);
 
-        // Bulk Save to Database
         await foodModel.insertMany(restaurantMenu.map(dish => ({ ...dish, restaurantId: id })));
         
         res.json({ success: true, data: restaurantMenu });
@@ -186,7 +185,6 @@ const syncAllRestaurantMenus = async (req, res) => {
         for (const resObj of restaurants) {
             const count = await foodModel.countDocuments({ restaurantId: resObj._id });
             if (count === 0) {
-                // Manually trigger fetch logic (simplified for sync)
                 const mockReq = { params: { id: resObj._id } };
                 const mockRes = { json: () => {} };
                 await fetchRestaurantMenu(mockReq, mockRes);

@@ -1,15 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { StoreContext } from '../context/StoreContext'
 import './Menu.css'
 
 const Menu = () => {
     const { id } = useParams(); 
     const navigate = useNavigate();
-    
-    // 🔥 Correction: 'url' ko context se nikala taaki Vercel wala link automatic chale
+    const location = useLocation();
     const { restaurant_list, addToCart, url } = useContext(StoreContext); 
-    
     const [loading, setLoading] = useState(true);
     const [restaurantMenu, setRestaurantMenu] = useState([]);
     const restaurant = restaurant_list?.find(res => String(res._id) === String(id));
@@ -19,7 +17,6 @@ const Menu = () => {
             try {
                 setLoading(true);
                 
-                // 🔥 Correction: 'http://localhost:4000' ki jagah context wala 'url' use kiya
                 const response = await fetch(`${url}/api/restaurant/menu/${id}`);
                 const data = await response.json();
                 
@@ -39,7 +36,24 @@ const Menu = () => {
         if (id) {
             fetchMenu();
         }
-    }, [id, url]); // 'url' ko dependency mein daal diya
+    }, [id, url]); 
+
+    useEffect(() => {
+        if (!loading && location.hash) {
+            const elementId = location.hash.replace('#', '');
+            setTimeout(() => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    element.style.transition = "background-color 0.5s ease";
+                    element.style.backgroundColor = "#fff9f6"; 
+                    setTimeout(() => {
+                        element.style.backgroundColor = "transparent";
+                    }, 2000);
+                }
+            }, 300); 
+        }
+    }, [loading, location.hash, restaurantMenu]);
 
     if (loading) {
         return (
@@ -71,7 +85,7 @@ const Menu = () => {
             <div className="food-display-list">
                 {restaurantMenu && restaurantMenu.length > 0 ? (
                     restaurantMenu.map((item) => (
-                        <div key={item._id} className='menu-item'>
+                        <div key={item._id} id={`dish-${item._id}`} className='menu-item'>
                             
                             <div className="menu-item-info">
                                 <b>{item.name}</b>

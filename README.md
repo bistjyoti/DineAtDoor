@@ -140,9 +140,6 @@ Contributions are welcome! Please fork the repository and create a pull request 
 Jyoti Bist [https://github.com/bistjyoti]
  — Project Owner
 
-Prince Kumar Gupta
- — Teammate
-
 ## 📫 Contact
 For any questions or suggestions, feel free to contact me.
 

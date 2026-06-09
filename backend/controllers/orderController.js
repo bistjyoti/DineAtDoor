@@ -2,13 +2,11 @@ import orderModel from './../models/orderModel.js';
 import userModel from './../models/userModel.js';
 import Razorpay from 'razorpay';
 
-// Razorpay instance - Nayi keys automatically load ho jayengi
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-// 1. Place Order Controller
 const placeOrder = async (req, res) => {
     try {
         const newOrder = new orderModel({
@@ -22,7 +20,6 @@ const placeOrder = async (req, res) => {
         
         await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
 
-        // Amount calculation for Razorpay (Paisa conversion)
         const options = {
             amount: Number(req.body.amount) * 100, 
             currency: "INR",
@@ -35,7 +32,6 @@ const placeOrder = async (req, res) => {
             return res.json({ success: false, message: "Razorpay order creation failed" });
         }
 
-        // Response with BOTH IDs for frontend synchronization
         res.json({ 
             success: true, 
             razorpayOrder: razorpayOrder, 
@@ -48,7 +44,6 @@ const placeOrder = async (req, res) => {
     }
 }
 
-// 2. Verify Payment Controller
 const verifyOrder = async (req, res) => {
     const { orderId, success } = req.body;
     try {
@@ -56,7 +51,7 @@ const verifyOrder = async (req, res) => {
             await orderModel.findByIdAndUpdate(orderId, { payment: true });
             res.json({ success: true, message: "Paid Successfully" })
         } else {
-            // User cancelled or payment failed - cleanup
+
             await orderModel.findByIdAndDelete(orderId);
             res.json({ success: false, message: "Payment Declined" })
         }
@@ -66,7 +61,6 @@ const verifyOrder = async (req, res) => {
     }
 }
 
-// 3. User Ke Orders Fetch Karna
 const userOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({ userId: req.body.userId })
@@ -77,7 +71,6 @@ const userOrders = async (req, res) => {
     }
 }
 
-// 4. Admin Panel Ke Liye Saare Orders List Karna
 const listOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({});
@@ -88,7 +81,6 @@ const listOrders = async (req, res) => {
     }
 }
 
-// 5. Order Status Update Karna
 const updateStatus = async (req, res) => {
     try {
         await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status })
@@ -99,7 +91,6 @@ const updateStatus = async (req, res) => {
     }
 }
 
-// 6. Security Delivery Proof Controller
 const verifyDeliveryProof = async (req, res) => {
     const { orderId, verificationMethod } = req.body;
     try {

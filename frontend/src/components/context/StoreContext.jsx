@@ -13,7 +13,7 @@ const StoreContextProvider = (props) => {
     const [food_list, setFoodList] = useState([]); 
     const [restaurant_list, setRestaurantList] = useState([]);
     const [cartItems, setCartItems] = useState({});
-    const [token, setToken] = useState(localStorage.getItem("token") || ""); // 🔥 FIXED: Hydrate token instantly from localStorage
+    const [token, setToken] = useState(localStorage.getItem("token") || ""); 
     const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
     
     const [currentLocation, setCurrentLocation] = useState("Kishanpur, Roorkee 📍");
@@ -31,7 +31,6 @@ const StoreContextProvider = (props) => {
         return localStorage.getItem('isFlashSaleOn') === 'true';
     });
     
-    // 🔥 FIXED: Prioritize build variable, then look for environment checks safely
     const url = process.env.VITE_API_URL || (
         window.location.hostname === "localhost" 
             ? "http://localhost:4000" 
@@ -119,7 +118,7 @@ const StoreContextProvider = (props) => {
             }
         };
         loadInitialAppState();
-    }, [fetchFoodList, url, token]); // 🔥 FIXED: Added token here to re-fetch cart details on authentication state changes
+    }, [fetchFoodList, url, token]); 
 
     useEffect(() => {
         if (locationCoords) {

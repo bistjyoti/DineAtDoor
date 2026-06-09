@@ -17,9 +17,8 @@
     gap: 80px;
 }
 
-/* 🔥 Naya Addition: Logo ko control karne ke liye */
 .footer-logo {
-    max-width: 180px; /* Desktop par size control */
+    max-width: 180px;
     height: auto;
     margin-bottom: 10px;
 }
@@ -54,10 +53,9 @@
     border: none;
 }
 
-/* 📱 Mobile Responsive Rules (Upgraded) */
 @media (max-width: 750px) {
     .footer {
-        padding: 40px 5vw; /* Mobile par thoda kam padding */
+        padding: 40px 5vw;
         margin-top: 50px;
     }
 
@@ -65,15 +63,15 @@
         display: flex;
         flex-direction: column;
         gap: 35px;
-        text-align: center; /* Mobile par center mein achha lagega */
+        text-align: center;
     }
 
     .footer-content-left, .footer-content-right, .footer-content-center {
-        align-items: center; /* Sab kuch center karo mobile par */
+        align-items: center; 
     }
 
     .footer-logo {
-        max-width: 140px; /* Mobile par logo thoda chota */
+        max-width: 140px;
     }
 
     .footer-copyright {

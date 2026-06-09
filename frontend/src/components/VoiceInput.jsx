@@ -1,118 +1,119 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const VoiceInput = ({ onVoiceInput, placeholder = "Click to speak..." }) => {
-    const [isListening, setIsListening] = useState(false);
-    const [transcript, setTranscript] = useState('');
-    const [isBrowserSupported, setIsBrowserSupported] = useState(false);
-    const recognitionRef = useRef(null);
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [isBrowserSupported, setIsBrowserSupported] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const recognitionRef = useRef(null);
 
-    useEffect(() => {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        
-        if (SpeechRecognition) {
-            setIsBrowserSupported(true);
-            const recognition = new SpeechRecognition();
+  useEffect(() => {
+    // Check for HTTPS (required on Vercel)
+    const isSecure = window.location.protocol === 'https:' || 
+                     window.location.hostname === 'localhost';
 
-            recognition.continuous = false; // Short commands ke liye best
-            recognition.interimResults = false; 
-            recognition.lang = 'en-US';
+    const SpeechRecognition = window.SpeechRecognition || 
+                               window.webkitSpeechRecognition;
 
-            recognition.onstart = () => setIsListening(true);
-            
-            recognition.onresult = (event) => {
-                const finalTranscript = event.results[0][0].transcript;
-                const cleanTranscript = finalTranscript.trim();
-                setTranscript(cleanTranscript);
-                if (onVoiceInput) onVoiceInput(cleanTranscript);
-            };
+    if (SpeechRecognition && isSecure) {
+      setIsBrowserSupported(true);
 
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error:', event.error);
-                setIsListening(false);
-            };
+      const recognition = new SpeechRecognition();
 
-            recognition.onend = () => setIsListening(false);
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 1;
 
-            recognitionRef.current = recognition;
+      recognition.onstart = () => {
+        setIsListening(true);
+        setErrorMsg('');
+      };
+
+      recognition.onresult = (event) => {
+        const finalTranscript = event.results[0][0].transcript;
+        const cleanTranscript = finalTranscript.trim();
+        setTranscript(cleanTranscript);
+        if (onVoiceInput) onVoiceInput(cleanTranscript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+
+        // Handle specific Vercel/HTTPS errors
+        switch (event.error) {
+          case 'not-allowed':
+            setErrorMsg('Microphone access denied. Please allow mic permission.');
+            break;
+          case 'network':
+            setErrorMsg('Network error. Check your connection.');
+            break;
+          case 'no-speech':
+            setErrorMsg('No speech detected. Try again.');
+            break;
+          default:
+            setErrorMsg(`Error: ${event.error}`);
         }
+      };
 
-        return () => {
-            if (recognitionRef.current) recognitionRef.current.abort();
-        };
-    }, [onVoiceInput]);
+      recognition.onend = () => {
+        setIsListening(false);
+      };
 
-    const startListening = () => {
-        setTranscript(''); 
-        if (onVoiceInput) onVoiceInput('');
+      recognitionRef.current = recognition;
+    } else if (!isSecure) {
+      setErrorMsg('Voice input requires HTTPS.');
+    }
+  }, []);
 
-        if (recognitionRef.current) {
-            try {
-                recognitionRef.current.start();
-            } catch (e) {
-                // Agar already active hai, toh restart logic
-                recognitionRef.current.stop();
-                setTimeout(() => recognitionRef.current.start(), 200);
-            }
-        }
-    };
+  const handleToggle = async () => {
+    if (!isBrowserSupported) return;
 
-    const stopListening = () => {
-        if (recognitionRef.current) recognitionRef.current.stop();
-    };
-
-    const speakText = (text) => {
-        if ('speechSynthesis' in window && text) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1;
-            window.speechSynthesis.speak(utterance);
-        }
-    };
-
-    if (!isBrowserSupported) {
-        return <p style={{ color: 'red', fontWeight: 'bold' }}>Browser doesn't support speech features.</p>;
+    if (isListening) {
+      recognitionRef.current?.stop();
+      return;
     }
 
-    return (
-        <div style={styles.container}>
-            <input
-                type="text"
-                value={transcript}
-                placeholder={placeholder}
-                readOnly
-                style={styles.input}
-            />
+    // Explicitly request mic permission before starting (KEY FIX for Vercel)
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      setErrorMsg('');
+      recognitionRef.current?.start();
+    } catch (err) {
+      setErrorMsg('Microphone permission denied.');
+      setIsListening(false);
+    }
+  };
 
-            <div style={styles.buttonGroup}>
-                <button onClick={startListening} disabled={isListening} style={{...styles.button, ...styles.startButton}}>
-                    {isListening ? "🎙️ Listening..." : "🎤 Start"}
-                </button>
-                <button onClick={stopListening} disabled={!isListening} style={{...styles.button, ...styles.stopButton}}>
-                    ⏹ Stop
-                </button>
-                {transcript && (
-                    <button onClick={() => speakText(transcript)} style={{...styles.button, ...styles.speakButton}}>
-                        🔊 Play
-                    </button>
-                )}
-            </div>
+  return (
+    <div className="voice-input-container">
+      <button
+        onClick={handleToggle}
+        disabled={!isBrowserSupported}
+        className={`voice-btn ${isListening ? 'listening' : ''}`}
+        title={isBrowserSupported ? placeholder : 'Voice not supported'}
+      >
+        {isListening ? '🔴 Listening...' : '🎤'}
+      </button>
 
-            <p style={styles.status}>
-                {isListening ? '🔴 Live Listening...' : transcript ? '✅ Captured' : ''}
-            </p>
-        </div>
-    );
-};
+      {transcript && (
+        <span className="transcript-text">{transcript}</span>
+      )}
 
-const styles = {
-    container: { padding: '15px', border: '1px solid #ddd', borderRadius: '12px', backgroundColor: '#fff', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' },
-    input: { width: '100%', padding: '12px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '8px', fontSize: '16px', boxSizing: 'border-box' },
-    buttonGroup: { display: 'flex', gap: '8px' },
-    button: { padding: '8px 12px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' },
-    startButton: { backgroundColor: '#4CAF50', color: 'white' },
-    stopButton: { backgroundColor: '#f44336', color: 'white' },
-    speakButton: { backgroundColor: '#2196F3', color: 'white' },
-    status: { marginTop: '10px', fontSize: '12px', color: '#555', fontWeight: 'bold' }
+      {errorMsg && (
+        <span className="voice-error" style={{ color: 'red', fontSize: '12px' }}>
+          {errorMsg}
+        </span>
+      )}
+
+      {!isBrowserSupported && (
+        <span style={{ color: 'gray', fontSize: '12px' }}>
+          Voice not supported in this browser
+        </span>
+      )}
+    </div>
+  );
 };
 
 export default VoiceInput;

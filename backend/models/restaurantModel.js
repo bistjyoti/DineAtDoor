@@ -13,5 +13,5 @@ const restaurantSchema = new mongoose.Schema({
     lng: { type: Number } 
 });
 
-const restaurantModel = mongoose.models.restaurant || mongoose.model("restaurant", restaurantSchema);
+const restaurantModel = mongoose.models.Restaurant || mongoose.model("Restaurant", restaurantSchema);
 export default restaurantModel;

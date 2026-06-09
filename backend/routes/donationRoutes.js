@@ -3,7 +3,6 @@ const router = express.Router();
 import NGODonation from '../models/NGODonation.js';
 import nodemailer from 'nodemailer'; 
 
-// ✉️ SECURE: Environment Variables (.env) ka use karke credentials hide kar diye hain
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -12,17 +11,16 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// 🎯 DYNAMIC: Ab ye helper function real restaurant email (restaurantEmail) ko as parameter lega
 const sendClaimEmail = async (restaurantName, restaurantEmail, foodItems, quantity) => {
     try {
         const mailOptions = {
-            from: `"DineAtDoor 🍲" <${process.env.EMAIL_USER}>`,
-            to: restaurantEmail || process.env.EMAIL_USER, // Agar restaurant ka email na mile toh backup me tumhare mail par aayega
-            subject: '🎉 Great News! Your Donated Food Has Been Claimed!',
+            from: `"DineAtDoor" <${process.env.EMAIL_USER}>`,
+            to: restaurantEmail || process.env.EMAIL_USER, 
+            subject: 'Great News! Your Donated Food Has Been Claimed!',
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                     <div style="text-align: center; border-bottom: 2px solid #2ecc71; padding-bottom: 10px;">
-                        <h1 style="color: #2ecc71; margin: 0;">DineAtDoor 🍲</h1>
+                        <h1 style="color: #2ecc71; margin: 0;">DineAtDoor</h1>
                     </div>
                     <h2 style="color: #2c3e50; font-size: 20px;">Hello ${restaurantName},</h2>
                     <p style="font-size: 16px; color: #333; line-height: 1.5;">Thank you for your generous contribution! We are pleased to inform you that a registered NGO has successfully <b style="color: #2ecc71;">Claimed</b> your donated food surplus.</p>
@@ -47,7 +45,6 @@ const sendClaimEmail = async (restaurantName, restaurantEmail, foodItems, quanti
     }
 };
 
-// 1. Restaurant se Donation Post karna
 // URL: http://localhost:4000/api/donations/donate
 router.post('/donate', async (req, res) => {
     try {
@@ -71,7 +68,6 @@ router.post('/donate', async (req, res) => {
     }
 });
 
-// 2. NGO ke liye Available Khana dikhana (DYNAMIC AUTO-EXPIRY LOGIC HERE 🔥)
 router.get('/list', async (req, res) => {
     try {
         const currentTime = new Date(); 
@@ -82,8 +78,8 @@ router.get('/list', async (req, res) => {
         })
         .populate({
             path: 'restaurantId',
-            select: 'name address location email', // Included email field just in case frontend needs it
-            model: 'Restaurant' // 🎯 FIXED: Model ref Capital kiya standard convention ke liye
+            select: 'name address location email',
+            model: 'Restaurant' 
         }); 
 
         res.status(200).json({ 
@@ -100,7 +96,6 @@ router.get('/list', async (req, res) => {
     }
 });
 
-// 3. NGO ka Claim Button (DYNAMIC RESTAURANT EMAIL POLLING HERE 🎯)
 // URL: http://localhost:4000/api/donations/claim/:id
 router.patch('/claim/:id', async (req, res) => {
     try {
@@ -117,17 +112,15 @@ router.patch('/claim/:id', async (req, res) => {
             return res.status(404).json({ success: false, message: "Donation nahi mila!" });
         }
 
-        // 2. 🎯 SMART RE-POPULATE: Database se original fresh email reference pull karenge
         const populatedDonation = await NGODonation.findById(donation._id).populate({
             path: 'restaurantId',
             select: 'email',
-            model: 'Restaurant' // 🎯 FIXED: Model ref Capital kiya
+            model: 'Restaurant'
         });
 
         const realRestaurantEmail = populatedDonation.restaurantId?.email;
         const targetName = donation.restaurantName;
 
-        // 3. Asli email target restaurant ko bhejenge (with await protection)
         await sendClaimEmail(targetName, realRestaurantEmail, donation.foodItems, donation.quantity);
 
         res.status(200).json({ 
@@ -145,8 +138,6 @@ router.patch('/claim/:id', async (req, res) => {
     }
 });
 
-// 📜 4. NGO ki khud ki Claim History lana
-// URL: http://localhost:4000/api/donations/history/:ngoId
 router.get('/history/:ngoId', async (req, res) => {
     try {
         const { ngoId } = req.params;

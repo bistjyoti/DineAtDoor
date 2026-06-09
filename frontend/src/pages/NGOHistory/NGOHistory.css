@@ -12,7 +12,7 @@
 }
 
 .history-header h2 {
-    color: #2ecc71; /* Pure green for a clean/noble vibe */
+    color: #2ecc71;
     font-size: 32px;
     margin-top: 15px;
     font-weight: 700;
@@ -37,7 +37,7 @@
 }
 
 .back-dashboard-btn:hover {
-    background: #ff4757; /* Vibrant accent color on hover */
+    background: #ff4757;
     transform: translateY(-2px);
 }
 

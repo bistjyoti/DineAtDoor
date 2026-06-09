@@ -5,7 +5,7 @@ import fs from "fs";
 const MONGO_URI = "mongodb://bistjyoti:jyoti1234@ac-lg8wzso-shard-00-00.a9bwasv.mongodb.net:27017,ac-lg8wzso-shard-00-01.a9bwasv.mongodb.net:27017,ac-lg8wzso-shard-00-02.a9bwasv.mongodb.net:27017/DineAtDoor?ssl=true&replicaSet=atlas-9h4vax-shard-0&authSource=admin&appName=DineAtDoor";
 
 const restaurantsConfig = [
-    // HUNGRY MOOD 
+     
     { id: "69fada160a78c82b1ae645db", file: "./data/mohitdhaba.json", category: "Indian", defaultDesc: "Fresh and delicious Mohit Dhaba specialty. Perfect to satisfy extreme hunger!" },
     { id: "69fb3af868cf27577bf58e33", file: "./data/punjabidhaba.json", category: "Indian", defaultDesc: "Authentic Punjabi style rich delicacy. Great when you are super hungry." },
     { id: "69fb3af868cf27577bf58e36", file: "./data/hangries.json", category: "Fast Food", defaultDesc: "Delicious, greasy fast food for your heavy hunger cravings." },
@@ -15,20 +15,16 @@ const restaurantsConfig = [
     { id: "69fb3af968cf27577bf58e45", file: "./data/shwarmajaan.json", category: "Fast Food", defaultDesc: "Perfectly spiced Mediterranean and local shawarmas to curb hunger." },
     { id: "69fb3af968cf27577bf58e46", file: "./data/thalaivabriyani.json", category: "Biryani", defaultDesc: "Aromatic, long-grain basmati biryani cooked on dum to satisfy heavy hunger." },
 
-    // HAPPY MOOD 
     { id: "69fb3af868cf27577bf58e34", file: "./data/nozypizza.json", category: "Pizza", defaultDesc: "Cheesy and hot freshly baked pizza. Sure to make you feel happy and celebrated!" },
 
-    // SAD MOOD 
     { id: "69fb3af868cf27577bf58e35", file: "./data/fivestarjanta.json", category: "Sweets & Snacks", defaultDesc: "Famous sweet treats for sad moments or custom premium celebrations." },
     { id: "69fb3af868cf27577bf58e39", file: "./data/thebelgiumwaffleco.json", category: "Desserts", defaultDesc: "Warm, crispy waffle with premium toppings. A sweet escape for a sad mood." },
 
-    // COMFORTABLE MOOD 
     { id: "69fb3af968cf27577bf58e3b", file: "./data/cafecoffeeday.json", category: "Beverages", defaultDesc: "Premium freshly brewed hot coffee and bakes to help you relax and feel comfortable." },
     { id: "69fb3af968cf27577bf58e44", file: "./data/patialalassi.json", category: "Beverages", defaultDesc: "Thick, rich, and creamy authentic Punjabi lassi, perfect to stay comfortable." },
     { id: "69fb3af968cf27577bf58e3f", file: "./data/tarmarind.json", category: "South Indian", defaultDesc: "Authentic coastal and light traditional main course, light and comfortable." },
     { id: "69fb3af968cf27577bf58e47", file: "./data/dabbaco.json", category: "Indian", defaultDesc: "Delicious and hearty tiffin-style home meals, nostalgic and comfortable." },
 
- 
     { id: "69fb3af968cf27577bf58e3c", file: "./data/hotelprakash.json", category: "Indian", defaultDesc: "Traditional premium meals cooked to perfection." },
     { id: "69fb3af968cf27577bf58e3d", file: "./data/tanishas.json", category: "Indian", defaultDesc: "Delicious homestyle and premium dynamic meals." },
     { id: "69fb3af968cf27577bf58e3e", file: "./data/civillineskathirollsandmomo.json", category: "Rolls & Momos", defaultDesc: "Crispy momos and perfectly wrapped kathi rolls." },

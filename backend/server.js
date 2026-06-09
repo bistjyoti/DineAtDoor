@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './config/db.js'
+import './models/restaurantModel.js'
 import foodRouter from './routes/foodRoute.js'
 import userRouter from './routes/userRoute.js'
 import cartRouter from './routes/cartRoute.js'
@@ -12,12 +13,9 @@ import donationRouter from './routes/donationRoutes.js'
 const app = express()
 const port = process.env.PORT || 4000 
 
-// Middleware
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(cors()) 
-
-// Routes
 app.use("/api/food", foodRouter)
 app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
@@ -28,10 +26,9 @@ app.use("/api/donations", donationRouter)
 app.use("/images", express.static('uploads'))
 
 app.get("/", (req, res) => {
-    res.send("API working - DineAtDoor Backend is Live! 🚀")
+    res.send("API working - DineAtDoor Backend is Live!")
 })
 
-// Database and Server Start
 const startServer = async () => {
     try {
         await connectDB() 

@@ -12,8 +12,8 @@ import Menu from './components/Menu/Menu'
 import OrderTracking from './pages/OrderTracking/OrderTracking'
 import Admin from './pages/AdminPanel/AdminPanel'
 import DonateFood from './pages/DonateFood/DonateFood' 
-import NGODashboard from './pages/NGODashboard/NGODashboard' // Naya Import
-import NGOHistory from './pages/NGOHistory/NGOHistory' // 🎯 FIXED: Chupchaap bina kuch bigade naya import add kar diya
+import NGODashboard from './pages/NGODashboard/NGODashboard' 
+import NGOHistory from './pages/NGOHistory/NGOHistory' 
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -40,8 +40,8 @@ const App = () => {
           <Route path='/track-order' element={<OrderTracking />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/donate' element={<DonateFood />} /> 
-          <Route path='/ngo' element={<NGODashboard />} /> {/* Naya Route Added */}
-          <Route path='/ngo-history' element={<NGOHistory />} /> {/* 🎯 FIXED: Chupchaap bina kuch bigade naya route add kar diya */}
+          <Route path='/ngo' element={<NGODashboard />} /> 
+          <Route path='/ngo-history' element={<NGOHistory />} /> 
         </Routes>
       </div>
       

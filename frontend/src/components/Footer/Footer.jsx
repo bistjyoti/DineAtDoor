@@ -7,7 +7,6 @@ const Footer = () => {
     <div className='footer' id='footer'>
         <div className="footer-content">
             <div className="footer-content-left">
-                {/* 🎯 FIXED: Yahan class add kar di hai taaki CSS isse control kar sake */}
                 <img src={assets.logo} className='footer-logo' alt="DineAtDoor Logo" />
                 
                 <p>DineAtDoor is your favorite food delivery partner, bringing fresh and delicious meals right to your doorstep with speed and care.</p>

@@ -17,24 +17,19 @@ const FoodDisplay = ({ category, selectedRestaurant, searchQuery }) => {
         if (selected === 'deserts' && (itemCategory === 'desserts' || itemCategory === 'dessert' || itemCategory === 'sweets & snacks')) return true;
         if (selected === 'indian' && (itemCategory === 'indian' || itemCategory === 'north indian' || itemCategory === 'south indian' || itemCategory === 'biryani')) return true;
         if (selected === 'burgers' && (itemCategory === 'burgers' || itemCategory === 'fast food')) return true;
-        
-        // 1. Rolls Fix: Sirf real rolls dikhao, rice/thupka ko skip karo jo galti se fast food category mein hain
         if (selected === 'rolls') {
             if (itemName.includes('rice') || itemName.includes('thupka') || itemName.includes('talumien')) return false;
             return itemCategory === 'rolls' || itemCategory === 'fast food' || itemName.includes('roll');
         }
         
-        // 2. Cakes Fix: Agar database mein strict cake item na ho, toh bakery ya dessert ke kuch items fall back karwa do
         if (selected === 'cake') {
             return itemCategory === 'cake' || itemCategory === 'cakes' || itemCategory === 'bakery' || itemCategory === 'dessert' || itemCategory === 'desserts' || itemName.includes('cake') || itemName.includes('pastry');
         }
 
-        // 3. Pasta Fix: Pasta category ya naam mein pasta check karo
         if (selected === 'pasta') {
             return itemCategory === 'pasta' || itemName.includes('pasta' || itemCategory === 'italian');
         }
 
-        // 4. Noodles Fix: Noodles ke sath jo galat items rolls mein ja rahe the, unhe yahan unki sahi jagah par dikhao
         if (selected === 'noodles') {
             return itemCategory === 'noodles' || itemCategory === 'chinese' || itemName.includes('noodles') || itemName.includes('thupka') || itemName.includes('talumien') || itemName.includes('chowmein');
         }
