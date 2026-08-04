@@ -34,7 +34,7 @@ const StoreContextProvider = (props) => {
     const url = process.env.VITE_API_URL || (
         window.location.hostname === "localhost" 
             ? "http://localhost:4000" 
-            : "https://dineatdoor-production.up.railway.app"
+            : "https://dineatdoor.onrender.com"
     ); 
 
     useEffect(() => {

@@ -13,7 +13,6 @@ export default defineConfig({
     watch: {
       usePolling: false
     },
-  
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
@@ -26,7 +25,7 @@ export default defineConfig({
   define: {
     'process.env.VITE_API_URL': JSON.stringify(
       process.env.NODE_ENV === 'production' 
-        ? 'https://dineatdoor-production.up.railway.app' 
+        ? 'https://dineatdoor.onrender.com' 
         : 'http://localhost:4000'
     )
   },
